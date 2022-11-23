@@ -3,7 +3,7 @@ import {Document, Schema, model} from 'mongoose';
 /**
  * This interface is where the Post schema is based from
  */
-export interface PostDocumentInterface extends Document {
+interface PostDocumentInterface extends Document {
   title: string,
   content: string,
   accountName: string,

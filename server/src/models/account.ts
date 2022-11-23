@@ -1,20 +1,19 @@
-import {Document, Schema, model} from 'mongoose';
-import {PostDocumentInterface} from './post';
+import {Schema, Types, model} from 'mongoose';
 
 /**
  * This interface is where the Account schema is based from
  */
- export interface AccountDocumentInterface extends Document {
+interface AccountInterface {
   username: string,
   accountName: string,
   description: string,
   email: string,
-  posts: PostDocumentInterface[],
-  likedPosts: PostDocumentInterface[]
+  posts: Types.ObjectId[];
+  likedPosts: Types.ObjectId[];
 }
 
 
-const AccountSchema = new Schema<AccountDocumentInterface>({
+const AccountSchema = new Schema<AccountInterface>({
   username: {
     type: String,
     required: true,
@@ -49,4 +48,4 @@ const AccountSchema = new Schema<AccountDocumentInterface>({
 /**
  * The final model for the Account database
  */
- export const Account = model<AccountDocumentInterface>('Account', AccountSchema);
+ export const Account = model<AccountInterface>('Account', AccountSchema);

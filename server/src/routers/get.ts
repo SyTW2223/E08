@@ -11,13 +11,32 @@ export const getRouter = express.Router();
  * Gets all the info from an account by its account name
  */
 getRouter.get('/account', (req, res) => {
-  const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:{};
+  const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:undefined;
+  if (!filter) {
+    res.status(404).send("An account name needs to be provided");
+  } else {
+    Account.findOne(filter).then((account) => {
+      if (account === null) {
+        res.status(404).send("No account found");
+      } else {
+        res.send(account);
+      }
+    }).catch(() => {
+      res.status(500).send();
+    });
+  }
+});
 
-  Account.findOne(filter).then((account) => {
-    if (account != null) {
-      res.send(account);
+
+/**
+ * Gets all the info from an account by its id
+ */
+ getRouter.get('/account/:id', (req, res) => {
+  Account.findById(req.params.id).then((account) => {
+    if (!account) {
+      res.status(404).send("No account was found");
     } else {
-      res.status(404).send();
+      res.send(account);
     }
   }).catch(() => {
     res.status(500).send();
@@ -26,38 +45,23 @@ getRouter.get('/account', (req, res) => {
 
 
 /**
- * Gets all the info from posts by its account name
+ * Gets all the info from posts by its title
  */
 getRouter.get('/post', (req, res) => {
-  const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:{};
-
-  Account.findOne(filter).then((account) => {
-    if (account != null) {
-      res.send(account);
-    } else {
-      res.status(404).send();
-    }
-  }).catch(() => {
-    res.status(500).send();
-  });
-});
-
-
-/**
- * Gets all the info from posts by its name
- */
-getRouter.get('/post', (req, res) => {
-  const filter = req.query.title?{title: req.query.title.toString()}:{};
-
-  Post.find(filter).then((post) => {
-    if (post.length !== 0) {
-      res.send(post);
-    } else {
-      res.status(404).send();
-    }
-  }).catch(() => {
-    res.status(500).send();
-  });
+  const title = req.query.title ? req.query.title.toString() : undefined;
+  if (!title) {
+    res.status(404).send("A title needs to be provided");
+  } else {
+    Post.find({title: new RegExp(title, "i")}).then((post) => {
+      if (post.length !== 0) {
+        res.send(post);
+      } else {
+        res.status(404).send("No post was found");
+      }
+    }).catch(() => {
+      res.status(500).send();
+    });
+  }
 });
 
 
@@ -67,7 +71,7 @@ getRouter.get('/post', (req, res) => {
 getRouter.get('/post/:id', (req, res) => {
   Post.findById(req.params.id).then((post) => {
     if (!post) {
-      res.status(404).send();
+      res.status(404).send("No post was found");
     } else {
       res.send(post);
     }

@@ -35,21 +35,28 @@ postRouter.post('/account', (req, res) => {
       error: 'An account name for the post must be provided',
     })
   } else {
-    Account.findOne({name: req.body.accountName.toString()}).then((account) => {
-      if (!account) {
+    Account.findOne({accountName: req.body.accountName.toString()}).then((account) => {
+      if (account === null) {
         res.status(404).send({
           error: 'Account not found',
         });
       } else {
-        const post = new Post({
+        const newPost = new Post({
           title: req.body.title,
           content: req.body.content,
           accountName: req.body.accountName,
           likesFromAccounts: req.body.likesFromAccounts,
           tags: req.body.tags
         });
-        post.save().then((post) => {
-          res.status(201).send(post);
+        
+        newPost.save().then((post) => {
+          // Storing the new Post in the Account
+          account.posts.push(post._id);
+          account.save().then(() => {
+            res.status(201).send(post);
+          }).catch((error) => {
+            res.status(400).send(error);
+          });
         }).catch((error) => {
           res.status(400).send(error);
         });
