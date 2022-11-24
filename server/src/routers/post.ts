@@ -14,6 +14,7 @@ postRouter.post('/account', (req, res) => {
   const account = new Account({
     username: req.body.username,
     accountName: req.body.accountName,
+    password: req.body.password,
     description: req.body.description,
     email: req.body.email,
     posts: req.body.posts,
@@ -45,6 +46,7 @@ postRouter.post('/account', (req, res) => {
           title: req.body.title,
           content: req.body.content,
           accountName: req.body.accountName,
+          password: req.body.password,
           likesFromAccounts: req.body.likesFromAccounts,
           tags: req.body.tags
         });

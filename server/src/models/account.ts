@@ -6,6 +6,7 @@ import {Schema, Types, model} from 'mongoose';
 interface AccountInterface {
   username: string,
   accountName: string,
+  password: string,
   description: string,
   email: string,
   posts: Types.ObjectId[];
@@ -23,6 +24,11 @@ const AccountSchema = new Schema<AccountInterface>({
     type: String,
     required: true,
     unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
     trim: true,
   },
   description: {
