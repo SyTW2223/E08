@@ -10,6 +10,7 @@ import {
 import Navbar from './components/Navbar';
 
 import { PostsList } from './components/posts/PostsList';
+import { Login } from './components/Login';
 
 function App() {
     return(
@@ -19,7 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element = {<PostsList />}/>
             <Route path="/home" element = {<PostsList />}/>
-            <Route path="/login" element = {<PostsList />}/>
+            <Route path="/login" element = {<Login />}/>
             <Route path="/register" element = {<PostsList />}/>
             <Route path="/profile" element = {<PostsList />}/>
           </Routes>
