@@ -28,10 +28,22 @@ export default function ButtonAppBar() {
           >
             UTOPIA
           </Typography>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography 
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
             Posts
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button
+            color="inherit"
+            sx={{
+              color: 'inherit',
+              backgroundColor: 'primary.light'
+            }}
+          >
+            LogIn
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

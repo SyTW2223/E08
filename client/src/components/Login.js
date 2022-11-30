@@ -3,8 +3,7 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 
 
 export const Login = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [accountName, setAccountName] = useState("");
   const [password, setPassword] = useState("");
 
 
@@ -13,6 +12,7 @@ export const Login = () => {
       <form className="loginForm">
         <Box
           display="flex"
+          color="primary"
           flexDirection={"column"}
           maxWidth={400}
           alignItems="center"
@@ -21,40 +21,53 @@ export const Login = () => {
           marginTop={5}
           padding={3}
           borderRadius={5}
-          boxShadow={'5px 5px 10px #ccc'}
+          sx={{backgroundColor: 'primary.main'}}
         >
-          <Typography variant="h3" padding={3} textAling="center">
+          <Typography variant="h4" padding={3} textAling="center">
             Login
           </Typography>
-          <TextField 
+          <TextField
+            label="Account Name"
             type={'text'}
-            value={name}
+            value={accountName}
             variant="outlined"
             margin="dense"
-            placeholder="Name" 
-            onChange={(e) => setName(e.target.value)}
+            placeholder="@AccountName"
+            onChange={(e) => setAccountName(e.target.value)}
           />
-          <TextField 
-            type={'email'}
-            value={email}
-            variant="outlined"
-            margin="dense"
-            placeholder="Email" 
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField 
+          <TextField
+            label="Password"
             type={'password'}
             value={password}
             variant="outlined"
             margin="dense"
-            placeholder="Password" 
+            placeholder="***********" 
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button sx={{marginTop: 2, borderRadius: 3}} variant="contained" color="warning">
+          <Button 
+            sx={{
+              marginTop: 2,
+              borderRadius: 3,
+              backgroundColor: 'primary.light'
+            }}
+            variant="contained"
+            color="inherit"
+          >
             Login
           </Button>
-          <Button sx={{marginTop: 2, borderRadius: 3}}>
-            Sign In Now
+          <Typography marginTop={1}>
+            Don't have an account?
+          </Typography>
+          <Button 
+            sx={{
+              marginTop: 1,
+              borderRadius: 3,
+              backgroundColor: 'primary.light'
+            }}
+            variant="contained"
+            color="inherit"
+          >
+            Sign Up Now
           </Button>
         </Box>
       </form>
