@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button } from "@mui/material";
 
+import { register } from '../actions/auth';
 
 export const Register = () => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [accountName, setAccountName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
 
   return (
     <div className="register">
@@ -25,17 +28,17 @@ export const Register = () => {
           borderRadius={5}
           sx={{backgroundColor: 'primary.main'}}
         >
-          <Typography variant="h4" padding={3} textAling="center">
+          <Typography variant="h4" padding={3}>
             Sign Up
           </Typography>
           <TextField
-            label="Name"
+            label="Username"
             type={'text'}
-            value={name}
+            value={username}
             variant="outlined"
             margin="dense"
             placeholder="Your Name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField 
             label="Account Name"
@@ -64,14 +67,22 @@ export const Register = () => {
             placeholder="*************" 
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button 
+          <Button
+            variant="contained"
+            color="inherit"
             sx={{
               marginTop: 2,
               borderRadius: 3,
               backgroundColor: 'primary.light'
             }}
-            variant="contained"
-            color="inherit"
+            onClick={() => {
+              dispatch(register(username, accountName, email, password))
+                .then(() => {
+                  console.log('Usuario registrado');
+                }).catch(() => {
+                  console.log('Error, usuario no registrado');
+                });
+            }}
           >
             Sign Me Up
           </Button>

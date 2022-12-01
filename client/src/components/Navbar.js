@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
+import {Link} from 'react-router-dom';
 
 export default function ButtonAppBar() {
   return (
@@ -14,8 +15,7 @@ export default function ButtonAppBar() {
         <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={Link} to='/'
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -36,13 +36,14 @@ export default function ButtonAppBar() {
             Posts
           </Typography>
           <Button
+            component={Link} to="/login"
             color="inherit"
             sx={{
               color: 'inherit',
               backgroundColor: 'primary.light'
             }}
           >
-            LogIn
+            Login
           </Button>
         </Toolbar>
       </AppBar>

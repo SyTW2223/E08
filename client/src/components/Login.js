@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button } from "@mui/material";
 
+import { Link } from 'react-router-dom';
+
+import { login } from '../actions/auth';
 
 export const Login = () => {
   const [accountName, setAccountName] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
 
   return (
     <div className="login">
@@ -23,7 +28,7 @@ export const Login = () => {
           borderRadius={5}
           sx={{backgroundColor: 'primary.main'}}
         >
-          <Typography variant="h4" padding={3} textAling="center">
+          <Typography variant="h4" padding={3}>
             Login
           </Typography>
           <TextField
@@ -52,13 +57,22 @@ export const Login = () => {
             }}
             variant="contained"
             color="inherit"
+            onClick={() => {
+              dispatch(login(accountName, password))
+                .then(() => {
+                  console.log('Usuario encontrado');
+                }).catch(() => {
+                  console.log('Error, La cuenta no existe');
+                });
+            }}
           >
             Login
           </Button>
           <Typography marginTop={1}>
             Don't have an account?
           </Typography>
-          <Button 
+          <Button
+            component={Link} to='/register'
             sx={{
               marginTop: 1,
               borderRadius: 3,

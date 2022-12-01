@@ -1,4 +1,5 @@
 import React from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,7 +10,6 @@ import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 // Más adelante haremos que la barra cambie según el estado
 import Navbar from './components/Navbar';
 
-import { PostsList } from './components/posts/PostsList';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
 
@@ -33,11 +33,11 @@ function App() {
         <Router>
           <Navbar />
             <Routes>
-              <Route path="/" element = {<PostsList />}/>
-              <Route path="/home" element = {<PostsList />}/>
+              <Route path="/" element = {<Login />}/>
+              <Route path="/home" element = {<Login />}/>
               <Route path="/login" element = {<Login />}/>
               <Route path="/register" element = {<Register />}/>
-              <Route path="/profile" element = {<PostsList />}/>
+              <Route path="/profile" element = {<Login />}/>
             </Routes>
         </Router>
       </ThemeProvider>

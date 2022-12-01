@@ -3,26 +3,27 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000/";
 
-const register = (username, email, password) => {
-  // return axios.post(API_URL + "signup", {
-  //   username,
-  //   email,
-  //   password,
-  // });
+
+export const register = (username, accountName, email, password) => {
+  return axios.post(API_URL + "account", {
+    "username": username,
+    "accountName": accountName,
+    "email": email,
+    "password": password,
+  });
 };
 
 
-const login = (username, password) => {
-//  return axios
-//    .post(API_URL + "signin", {
-//      username,
-//      password,
-//    })
-//    .then((response) => {
-//      if (response.data.accessToken) {
-//        localStorage.setItem("user", JSON.stringify(response.data));
-//      }
-//
-//      return response.data;
-//    });
+export const login = (accountName) => {
+  return axios.get(API_URL + "account", {
+  params:{
+    "accountName": accountName
+  }
+  });
+};
+
+
+export default {
+  register,
+  login
 };
