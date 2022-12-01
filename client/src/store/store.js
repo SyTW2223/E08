@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import postsReducer from './reducers/posts/postsSlice'
+import postsReducer from '../reducers/posts/postsSlice'
 
 
 // Crea la store de Redux
