@@ -3,10 +3,14 @@ import './db/mongoose';
 import {defaultRouter} from './routers/default';
 import {postRouter} from './routers/post';
 import {getRouter} from './routers/get';
+const cors = require("cors");
 // import {patchRouter} from './routers/patch';
 import {deleteRouter} from './routers/delete';
 
 const app = express();
+app.use(cors({
+  origin: "http://localhost:3000",
+}));
 app.use(express.json());
 app.use(postRouter);
 app.use(getRouter);
@@ -20,3 +24,4 @@ const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Server up in: http://localhost:${port}`);
 });
+
