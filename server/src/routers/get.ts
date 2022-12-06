@@ -79,3 +79,30 @@ getRouter.get('/post/:id', (req, res) => {
     res.status(500).send();
   });
 });
+
+/**
+ * Check if a user is registered
+ */
+getRouter.get('/login', (req, res) => {
+  const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:undefined;
+  const passwd = req.query.password? req.query.password.toString(): undefined
+  if (!filter) {
+    res.status(404).send("An account name needs to be provided");
+  } else {
+    Account.findOne(filter).then((account) => {
+      if (account === null) {
+        res.status(404).send("No account found");
+      } else {
+        if( account.password === passwd) {
+          res.send({
+            token : "kaebnfjkadfjkd"
+          });
+        } else {
+          res.status(404).send("Incorrect password");
+        }
+      }
+    }).catch(() => {
+      res.status(500).send();
+    });
+  }
+});

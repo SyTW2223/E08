@@ -62,7 +62,7 @@ export const Login = () => {
                 .then(() => {
                   console.log('Usuario encontrado');
                 }).catch(() => {
-                  console.log('Error, La cuenta no existe');
+                  console.log('Error con contraseña o usuario');
                 });
             }}
           >

@@ -29,25 +29,17 @@ export const register = (username, accountName, email, password) => (dispatch) =
 }
 
 export const login = (accountName, password)=> (dispatch) => {
-  return AuthService.login(accountName).then(
+  return AuthService.login(accountName, password).then(
     (response) => {
-      const passwordAccount = response.data.password
-      if (password === passwordAccount) {
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: response.data
-        })
-      } else {
-        dispatch({
-          type: LOGIN_FAIL,
-          payload: "Contraseña incorrecta"
-        })
-      }
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: response.data
+      })
     },
     (error) => {
       dispatch({
         type: LOGIN_FAIL,
-        payload: error.data
+        payload: "Password or username error"
       });
       return Promise.reject();
     }

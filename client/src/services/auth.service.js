@@ -14,10 +14,11 @@ export const register = (username, accountName, email, password) => {
 };
 
 
-export const login = (accountName) => {
-  return axios.get(API_URL + "account", {
+export const login = (accountName, password) => {
+  return axios.get(API_URL + "login", {
   params:{
-    "accountName": accountName
+    "accountName": accountName,
+    "password": password
   }
   });
 };
