@@ -1,6 +1,10 @@
+require('dotenv').config();
+
 import * as express from 'express';
 import { Account } from '../models/account';
 import { Post } from '../models/post';
+
+const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 
 /**
@@ -87,8 +91,13 @@ postRouter.post('/login', (req, res) => {
       } else {
         let compare = await bcryptjs.compare(passwd, account.password);
         if (compare) {
+          const accountName = account.accountName;
+          const user = { accountName: accountName }; 
+          
+          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+          
           res.send({
-            token: "kaebnfjkadfjkd"
+            "accessToken": accessToken
           });
         } else {
           res.status(404).send("Incorrect password");
