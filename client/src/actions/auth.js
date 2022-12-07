@@ -39,7 +39,7 @@ export const login = (accountName, password)=> (dispatch) => {
     (error) => {
       dispatch({
         type: LOGIN_FAIL,
-        payload: "Password or username error"
+        payload: response.data
       });
       return Promise.reject();
     }

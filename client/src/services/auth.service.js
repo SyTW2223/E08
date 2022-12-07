@@ -15,16 +15,18 @@ export const register = (username, accountName, email, password) => {
 
 
 export const login = (accountName, password) => {
-  return axios.get(API_URL + "login", {
-  params:{
+  return axios.post(API_URL + "login", {
     "accountName": accountName,
     "password": password
-  }
   });
 };
 
+const logout = () => {
+  localStorage.removeItem("user");
+}
 
 export default {
   register,
-  login
+  login,
+  logout
 };
