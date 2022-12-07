@@ -7,6 +7,8 @@ import { Post } from '../models/post';
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 
+import authenticateToken from '../middleware/authJwt';
+
 /**
  * Contains all the functionality to store items in the database
  */
@@ -15,7 +17,7 @@ export const postRouter = express.Router();
 /**
  * Stores an account with all its data in the database
  */
-postRouter.post('/account', async (req, res) => {
+postRouter.post('/signup', async (req, res) => {
   let passwordHash = await bcryptjs.hash(req.body.password, 10);
   const account = new Account({
     username: req.body.username,
@@ -33,10 +35,47 @@ postRouter.post('/account', async (req, res) => {
   });
 });
 
+
+/**
+ * Check if a user is registered
+ */
+postRouter.post('/login', (req, res) => {
+  if (!req.body.accountName) {
+    res.status(400).send({
+      error: 'An account name for the post must be provided',
+    })
+  } else {
+    const filter = { accountName: req.body.accountName.toString() };
+    Account.findOne(filter).then(async (account) => {
+      const passwd = req.body.password.toString();
+      if (account === null) {
+        res.status(404).send("No account found");
+      } else {
+        let compare = await bcryptjs.compare(passwd, account.password);
+        if (compare) {
+          const accountName = account.accountName;
+          const user = { accountName: accountName }; 
+          
+          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+          
+          res.send({
+            "accessToken": accessToken
+          });
+        } else {
+          res.status(404).send("Incorrect password");
+        }
+      }
+    }).catch(() => {
+      res.status(500).send();
+    });
+  }
+});
+
+
 /**
  * Stores a post with all its data in the database
  */
-postRouter.post('/post', (req, res) => {
+ postRouter.post('/post', authenticateToken, (req, res) => {
   if (!req.body.accountName) {
     res.status(400).send({
       error: 'An account name for the post must be provided',
@@ -70,41 +109,6 @@ postRouter.post('/post', (req, res) => {
           res.status(400).send(error);
         });
       }
-    });
-  }
-});
-
-/**
- * Check if a user is registered
- */
-postRouter.post('/login', (req, res) => {
-  if (!req.body.accountName) {
-    res.status(400).send({
-      error: 'An account name for the post must be provided',
-    })
-  } else {
-    const filter = { accountName: req.body.accountName.toString() };
-    Account.findOne(filter).then(async (account) => {
-      const passwd = req.body.password.toString();
-      if (account === null) {
-        res.status(404).send("No account found");
-      } else {
-        let compare = await bcryptjs.compare(passwd, account.password);
-        if (compare) {
-          const accountName = account.accountName;
-          const user = { accountName: accountName }; 
-          
-          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-          
-          res.send({
-            "accessToken": accessToken
-          });
-        } else {
-          res.status(404).send("Incorrect password");
-        }
-      }
-    }).catch(() => {
-      res.status(500).send();
     });
   }
 });

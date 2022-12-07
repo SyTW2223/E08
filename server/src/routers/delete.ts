@@ -1,7 +1,8 @@
 import * as express from 'express';
 import { Account } from '../models/account';
 import { Post } from '../models/post';
-//import { Post } from '../models/post';
+
+import authenticateToken from '../middleware/authJwt';
 
 /**
  * Contains all the functionability related to get post information
@@ -11,7 +12,7 @@ export const deleteRouter = express.Router();
 /**
  * delete all the info from an account by its account name
  */
-deleteRouter.delete('/account', (req, res) => {
+deleteRouter.delete('/account', authenticateToken, (req, res) => {
     const filter = req.query.accountName ? { accountName: req.query.accountName.toString() } : undefined;
     if (!filter) {
         res.status(404).send("An account name needs to be provided");
@@ -36,7 +37,7 @@ deleteRouter.delete('/account', (req, res) => {
 /**
  * delete all the info from an account by its id
  */
-deleteRouter.delete('/account/:id', (req, res) => {
+deleteRouter.delete('/account/:id', authenticateToken, (req, res) => {
     Account.findById(req.params.id).then((account) => {
         if (!account) {
             res.status(404).send();

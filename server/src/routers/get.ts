@@ -12,7 +12,7 @@ export const getRouter = express.Router();
 /**
  * Gets all the info from an account by its account name
  */
-getRouter.get('/account', (req, res) => {
+getRouter.get('/account', authenticateToken, (req, res) => {
   const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:undefined;
   if (!filter) {
     res.status(404).send("An account name needs to be provided");
@@ -33,7 +33,7 @@ getRouter.get('/account', (req, res) => {
 /**
  * Gets all the info from an account by its id
  */
- getRouter.get('/account/:id', (req, res) => {
+ getRouter.get('/account/:id', authenticateToken, (req, res) => {
   Account.findById(req.params.id).then((account) => {
     if (!account) {
       res.status(404).send("No account was found");

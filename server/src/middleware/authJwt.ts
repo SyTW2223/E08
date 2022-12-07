@@ -14,11 +14,11 @@ export interface CustomRequest extends Request {
 const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('authorization')?.replace('Bearer ', '');
- 
+    
     if (!token) {
       throw new Error();
     }
- 
+    
     const decoded = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret);
     (req as CustomRequest).token = decoded;
  

@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000/";
 
 
 export const register = (username, accountName, email, password) => {
-  return axios.post(API_URL + "account", {
+  return axios.post(API_URL + "signup", {
     "username": username,
     "accountName": accountName,
     "email": email,
