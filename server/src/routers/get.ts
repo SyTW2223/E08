@@ -2,6 +2,8 @@ import * as express from 'express';
 import {Account} from '../models/account';
 import {Post} from '../models/post';
 
+import authenticateToken from '../middleware/authJwt'
+
 /**
  * Contains all the functionability related to get post information
  */
@@ -47,7 +49,7 @@ getRouter.get('/account', (req, res) => {
 /**
  * Gets all the info from posts by its title
  */
-getRouter.get('/post', (req, res) => {
+getRouter.get('/post', authenticateToken, (req, res) => {
   const title = req.query.title ? req.query.title.toString() : undefined;
   if (!title) {
     res.status(404).send("A title needs to be provided");
@@ -68,7 +70,7 @@ getRouter.get('/post', (req, res) => {
 /**
  * Gets all the info from a post by its id
  */
-getRouter.get('/post/:id', (req, res) => {
+getRouter.get('/post/:id', authenticateToken, (req, res) => {
   Post.findById(req.params.id).then((post) => {
     if (!post) {
       res.status(404).send("No post was found");
