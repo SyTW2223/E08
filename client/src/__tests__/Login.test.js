@@ -16,12 +16,12 @@ beforeEach(() => {
 
 describe("Login component tests", () => {
   it("Must have an input for the account name", () => {
-    // const accountNameField = screen.getByLabelText(/account name/i);
-    // expect(accountNameField).toBeEnabled();
+    const accountNameField = screen.getByLabelText(/account name/i);
+    expect(accountNameField).toBeEnabled();
   });
 
   it("Must have an input for the password", () => {
-    // const passwordField = screen.getByLabelText(/password/i);
-    // expect(passwordField).toBeEnabled();
+    const passwordField = screen.getByLabelText(/password/i);
+    expect(passwordField).toBeEnabled();
   });
 });
