@@ -1,7 +1,7 @@
 import React from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import store from '../store';
+import store from './store';
 
 
 const render = (children) => rtlRender(
