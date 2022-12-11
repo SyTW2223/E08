@@ -5,6 +5,10 @@ export const LOGIN_SUCCESS = "@APP/LOGIN_SUCCESS";
 export const LOGIN_FAIL = "@APP/LOGIN_FAIL";
 export const LOGOUT = "@APP/LOGOUT";
 
+// Tipos de acciones para las notificaciones del servidor al cliente
+export const SET_MESSAGE = "@API/SET_MESSAGE";
+export const CLEAR_MESSAGE = "@API/CLEAR_MESSAGE";
+
 // Tipos de acciones para los post de la aplicacion
 export const POST_SUCCES = "@POST/POST_FOUND"
 export const POST_FAIL_FOUND = "@POST/POST_FAIL_FOUND"

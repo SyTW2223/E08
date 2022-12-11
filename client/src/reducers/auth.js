@@ -7,14 +7,14 @@ import {
 } from "../actions/types";
 
 
-const initialState = {
-  isLoggedIn: false,
-  user: null
-}
+const user = JSON.parse(localStorage.getItem("user"));
 
+const initialState = user ? {isLoggedIn: true, user}:{isLoggedIn: false, user: null};
 
 export default function rootReducer(state = initialState, action) {
-  switch (action.type) {
+  const { type, payload } = action;
+
+  switch (type) {
     case REGISTER_SUCCESS:
       return {
         ...state,
@@ -29,7 +29,7 @@ export default function rootReducer(state = initialState, action) {
       return {
         ...state,
         isLoggedIn: true,
-        user: action.payload,
+        user: payload.user,
       };
     case LOGIN_FAIL:
       return {

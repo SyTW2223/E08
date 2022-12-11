@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Alert } from "@mui/material";
 
 import { register } from '../actions/auth';
 
@@ -9,8 +9,19 @@ export const Register = () => {
   const [accountName, setAccountName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userCreated, setUserCreated] = useState(false);
 
+  const { message } = useSelector(state => state.message);
   const dispatch = useDispatch();
+
+  const handleRegister = () => {
+    dispatch(register(username, accountName, email, password))
+      .then(() => {
+        setUserCreated(true);
+      }).catch(() => {
+        setUserCreated(false);
+      });
+  }
 
   return (
     <div className="register">
@@ -75,17 +86,16 @@ export const Register = () => {
               borderRadius: 3,
               backgroundColor: 'primary.light'
             }}
-            onClick={() => {
-              dispatch(register(username, accountName, email, password))
-                .then(() => {
-                  console.log('Usuario registrado');
-                }).catch(() => {
-                  console.log('Error, usuario no registrado');
-                });
-            }}
+            onClick={handleRegister}
           >
             Sign Me Up
           </Button>
+
+          {message && (
+            userCreated 
+              ? <Alert sx ={{marginTop: 2}} severity="success" variant="filled">{message}</Alert>
+              : <Alert sx ={{marginTop: 2}} severity="error" variant="filled">{message}</Alert>
+          )}
         </Box>
       </form>
     </div>

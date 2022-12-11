@@ -45,23 +45,23 @@ describe("SignUp component tests", () => {
 });
 
 // describe("User Sign Up test", () => {
-//   it("The user login correctly", async () => {
+//   it("The user sign up correctly", async () => {
 //     const userNameField = screen.getByLabelText(/username/i);
 //     const accountNameField = screen.getByLabelText(/account name/i);
 //     const emailField = screen.getByLabelText(/email/i);
 //     const passwordField = screen.getByLabelText(/password/i);
-
+// 
 //     fireEvent.change(userNameField, {target: {value: 'pepe'}})
 //     fireEvent.change(accountNameField, {target: {value: '@pepe'}})
 //     fireEvent.change(emailField, {target: {value: 'pepe@gmail.com'}})
 //     fireEvent.change(passwordField, {target: {value: '1234'}})
-
+// 
 //     const buttonsign = screen.getByRole('button', {name: /sign me up/i});
 //     fireEvent.click(buttonsign);
-
-//     const resultREgister = await screen.findByText(/ user created successfully/i)
-
+// 
+//     const resultRegister = await screen.findByText(/Account successfully created/i)
+// 
 //     screen.debug()
-//     expect(resultREgister).toBeInTheDocument()
+//     expect(resultRegister).toBeInTheDocument()
 //   });
 // });

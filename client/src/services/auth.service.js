@@ -18,12 +18,20 @@ export const login = (accountName, password) => {
   return axios.post(API_URL + "login", {
     "accountName": accountName,
     "password": password
+  }).then((response) => {
+    if (response.data.accessToken) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+    }
+
+    return response.data
   });
 };
+
 
 const logout = () => {
   localStorage.removeItem("user");
 }
+
 
 export default {
   register,

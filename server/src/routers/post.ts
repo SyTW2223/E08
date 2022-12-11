@@ -18,20 +18,33 @@ export const postRouter = express.Router();
  * Stores an account with all its data in the database
  */
 postRouter.post('/signup', async (req, res) => {
-  let passwordHash = await bcryptjs.hash(req.body.password, 10);
-  const account = new Account({
-    username: req.body.username,
-    accountName: req.body.accountName,
-    password: passwordHash,
-    description: req.body.description,
-    email: req.body.email,
-    posts: req.body.posts,
-    likedPosts: req.body.likedPosts
-  });
-  account.save().then((account) => {
-    res.status(201).send(account);
-  }).catch((error) => {
-    res.status(400).send(error);
+  const filter = { accountName: req.body.accountName.toString() };
+  Account.findOne(filter).then(async (account) => {
+    if (account === null) {
+      let passwordHash = await bcryptjs.hash(req.body.password, 10);
+      const account = new Account({
+        username: req.body.username,
+        accountName: req.body.accountName,
+        password: passwordHash,
+        description: req.body.description,
+        email: req.body.email,
+        posts: req.body.posts,
+        likedPosts: req.body.likedPosts
+      });
+      account.save().then(() => {
+        res.status(201).send({
+          message: "Account successfully created",
+        });
+      }).catch((error) => {
+        res.status(400).send(error);
+      });
+    } else {
+      res.status(409).send({
+        error: 'The account name is already in use',
+      });
+    }
+  }).catch(() => {
+    res.status(500).send();
   });
 });
 
@@ -42,7 +55,7 @@ postRouter.post('/signup', async (req, res) => {
 postRouter.post('/login', (req, res) => {
   if (!req.body.accountName) {
     res.status(400).send({
-      error: 'An account name for the post must be provided',
+      error: 'An account name must be provided',
     })
   } else {
     const filter = { accountName: req.body.accountName.toString() };

@@ -3,6 +3,7 @@ import {
   REGISTER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  SET_MESSAGE,
   LOGOUT,
 } from "./types";
 
@@ -14,34 +15,68 @@ export const register = (username, accountName, email, password) => (dispatch) =
     (response) => {
       dispatch({
         type: REGISTER_SUCCESS,
-        payload: response.data
       });
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: response.data.message,
+      });
+
       return Promise.resolve();
     },
     (error) => {
+      const message =
+        error.response.data.error || error.message;
+
       dispatch({
-        type: REGISTER_FAIL,
-        payload: error.data
+        type: REGISTER_FAIL, 
       });
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: message,
+      });
+
       return Promise.reject();
     }
   )
 }
 
+// Creador de acciones para login
 export const login = (accountName, password)=> (dispatch) => {
   return AuthService.login(accountName, password).then(
-    (response) => {
+    (data) => {
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: response.data
+        payload: { user: data },
       })
+
+      return Promise.resolve();
     },
     (error) => {
+      const message =
+        error.response.data.error || error.message;
+      
       dispatch({
         type: LOGIN_FAIL,
-        payload: response.data
       });
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: message,
+      });
+
       return Promise.reject();
     }
   )
+}
+
+
+// Creador de acciones para salir de la sesión
+export const logout= () => (dispatch) => {
+  AuthService.logout();
+
+  dispatch({
+    type: LOGOUT,
+  });
 }
