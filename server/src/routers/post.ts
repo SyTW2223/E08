@@ -56,13 +56,15 @@ postRouter.post('/login', (req, res) => {
   if (!req.body.accountName) {
     res.status(400).send({
       error: 'An account name must be provided',
-    })
+    });
   } else {
     const filter = { accountName: req.body.accountName.toString() };
     Account.findOne(filter).then(async (account) => {
       const passwd = req.body.password.toString();
       if (account === null) {
-        res.status(404).send("No account found");
+        res.status(404).send({
+          error: "No account found",
+        });
       } else {
         let compare = await bcryptjs.compare(passwd, account.password);
         if (compare) {
@@ -74,7 +76,9 @@ postRouter.post('/login', (req, res) => {
             accessToken: accessToken
           });
         } else {
-          res.status(404).send("Incorrect password");
+          res.status(404).send({
+            error: "Incorrect password",
+          });
         }
       }
     }).catch(() => {

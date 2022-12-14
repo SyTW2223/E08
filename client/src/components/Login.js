@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Box, Typography, TextField, Button, Alert, FormControl } from "@mui/material";
 import { LoadingButton } from '@mui/lab/';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 
@@ -54,24 +54,28 @@ export const Login = () => {
           <Typography variant="h4" padding={3}>
             Login
           </Typography>
-          <TextField
-            label="Account Name"
-            type={'text'}
-            value={accountName}
-            variant="outlined"
-            margin="dense"
-            placeholder="@AccountName"
-            onChange={(e) => setAccountName(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type={'password'}
-            value={password}
-            variant="outlined"
-            margin="dense"
-            placeholder="***********" 
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <FormControl>
+            <TextField
+              label="Account Name"
+              type={'text'}
+              value={accountName}
+              required={true}
+              variant="outlined"
+              margin="dense"
+              placeholder="@AccountName"
+              onChange={(e) => setAccountName(e.target.value)}
+            />
+            <TextField
+              label="Password"
+              type={'password'}
+              value={password}
+              required={true}
+              variant="outlined"
+              margin="dense"
+              placeholder="***********" 
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
           <LoadingButton
             type="submit"
             color="inherit"

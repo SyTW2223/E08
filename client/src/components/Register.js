@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Box, Typography, TextField, Button, Alert, FormControl } from "@mui/material";
 
 import { register } from '../actions/auth';
 
@@ -27,7 +27,6 @@ export const Register = () => {
 
   return (
     <div className="register">
-      <form className="registerForm" onSubmit={handleRegister}>
         <Box
           display="flex"
           color="primary"
@@ -41,65 +40,74 @@ export const Register = () => {
           borderRadius={5}
           sx={{backgroundColor: 'primary.main'}}
         >
-          <Typography variant="h4" padding={3}>
-            Sign Up
-          </Typography>
-          <TextField
-            label="Username"
-            type={'text'}
-            value={username}
-            variant="outlined"
-            margin="dense"
-            placeholder="Your Name"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField 
-            label="Account Name"
-            type={'text'}
-            value={accountName}
-            variant="outlined"
-            margin="dense"
-            placeholder="@Account_Name"
-            onChange={(e) => setAccountName(e.target.value)}
-          />
-          <TextField
-            label="Email"
-            type={'email'}
-            value={email}
-            variant="outlined"
-            margin="dense"
-            placeholder="yourmail@example.com" 
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type={'password'}
-            value={password}
-            variant="outlined"
-            margin="dense"
-            placeholder="*************" 
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="inherit"
-            sx={{
-              marginTop: 2,
-              borderRadius: 3,
-              backgroundColor: 'primary.light'
-            }}
-          >
-            Sign Me Up
-          </Button>
+          <form className="registerForm" onSubmit={handleRegister}>
+            <Typography variant="h4" padding={2}>
+              Sign Up
+            </Typography>
+            <FormControl>
+              <TextField
+                label="Username"
+                type={'text'}
+                value={username}
+                required={true}
+                message="A username is required"
+                variant="outlined"
+                margin="dense"
+                placeholder="Your Name"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <TextField 
+                label="Account Name"
+                type={'text'}
+                value={accountName}
+                required={true}
+                variant="outlined"
+                margin="dense"
+                placeholder="@Account_Name"
+                onChange={(e) => setAccountName(e.target.value)}
+              />
+              <TextField
+                label="Email"
+                type={'email'}
+                value={email}
+                required={true}
+                variant="outlined"
+                margin="dense"
+                placeholder="yourmail@example.com" 
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                label="Password"
+                type={'password'}
+                value={password}
+                required={true}
+                variant="outlined"
+                margin="dense"
+                placeholder="*************" 
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="inherit"
+                sx={{
+                  marginTop: 2,
+                  borderRadius: 3,
+                  backgroundColor: 'primary.light'
+                }}
+              >
+                Sign Me Up
+              </Button>
 
-          {message && (
-            userCreated 
-              ? <Alert sx ={{marginTop: 2}} severity="success" variant="filled">{message}</Alert>
-              : <Alert sx ={{marginTop: 2}} severity="error" variant="filled">{message}</Alert>
-          )}
+              {message && (
+                userCreated 
+                  ? <Alert sx ={{marginTop: 2}} severity="success" variant="filled">{message}</Alert>
+                  : <Alert sx ={{marginTop: 2}} severity="error" variant="filled">{message}</Alert>
+              )}
+
+            </FormControl>
+          </form>
         </Box>
-      </form>
     </div>
   )
 }
