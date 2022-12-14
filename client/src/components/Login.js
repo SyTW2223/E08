@@ -18,10 +18,12 @@ export const Login = () => {
 
   const dispatch = useDispatch();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setLoading(true); 
+
     dispatch(login(accountName, password))
       .then(() => {
-        setLoading(true); 
         navigate("/");
       })
       .catch(() => {
@@ -35,7 +37,7 @@ export const Login = () => {
 
   return (
     <div className="login">
-      <form className="loginForm">
+      <form className="loginForm" onSubmit={handleLogin}>
         <Box
           display="flex"
           color="primary"
@@ -71,13 +73,13 @@ export const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <LoadingButton
+            type="submit"
             color="inherit"
             sx={{
               marginTop: 2,
               borderRadius: 3,
               backgroundColor: 'primary.light'
             }}
-            onClick={handleLogin}
             loading={loading}
             variant="contained"
           >

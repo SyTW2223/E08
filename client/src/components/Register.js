@@ -14,7 +14,9 @@ export const Register = () => {
   const { message } = useSelector(state => state.message);
   const dispatch = useDispatch();
 
-  const handleRegister = () => {
+  const handleRegister = (e) => {
+    e.preventDefault();
+
     dispatch(register(username, accountName, email, password))
       .then(() => {
         setUserCreated(true);
@@ -25,7 +27,7 @@ export const Register = () => {
 
   return (
     <div className="register">
-      <form className="registerForm">
+      <form className="registerForm" onSubmit={handleRegister}>
         <Box
           display="flex"
           color="primary"
@@ -79,6 +81,7 @@ export const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
+            type="submit"
             variant="contained"
             color="inherit"
             sx={{
@@ -86,7 +89,6 @@ export const Register = () => {
               borderRadius: 3,
               backgroundColor: 'primary.light'
             }}
-            onClick={handleRegister}
           >
             Sign Me Up
           </Button>
