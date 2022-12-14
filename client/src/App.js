@@ -12,6 +12,7 @@ import Navbar from './components/Navbar';
 
 import { Login } from './components/Login';
 import { Register } from './components/Register';
+import { Main } from './components/Main';
 
 const theme = createTheme({
   palette: {
@@ -33,11 +34,11 @@ function App() {
         <Router>
           <Navbar />
             <Routes>
-              <Route path="/" element = {<Login />}/>
-              <Route path="/home" element = {<Login />}/>
+              <Route path="/" element = {<Main />}/>
+              <Route path="/home" element = {<Main />}/>
               <Route path="/login" element = {<Login />}/>
               <Route path="/register" element = {<Register />}/>
-              <Route path="/profile" element = {<Login />}/>
+              <Route path="/profile" element = {<Main />}/>
             </Routes>
         </Router>
       </ThemeProvider>

@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, TextField, Button } from "@mui/material";
-
-import { Link } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { LoadingButton } from '@mui/lab/';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 
 import { login } from '../actions/auth';
 
 export const Login = () => {
+  let navigate = useNavigate();
+
   const [accountName, setAccountName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const { message } = useSelector(state => state.message);
 
   const dispatch = useDispatch();
+
+  const handleLogin = () => {
+    dispatch(login(accountName, password))
+      .then(() => {
+        setLoading(true); 
+        navigate("/");
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }
+
+  if (isLoggedIn) {
+    return <Navigate to ="/" />;
+  }
 
   return (
     <div className="login">
@@ -49,25 +70,24 @@ export const Login = () => {
             placeholder="***********" 
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button 
+          <LoadingButton
+            color="inherit"
             sx={{
               marginTop: 2,
               borderRadius: 3,
               backgroundColor: 'primary.light'
             }}
+            onClick={handleLogin}
+            loading={loading}
             variant="contained"
-            color="inherit"
-            onClick={() => {
-              dispatch(login(accountName, password))
-                .then(() => {
-                  console.log('Usuario encontrado');
-                }).catch(() => {
-                  console.log('Error con contraseña o usuario');
-                });
-            }}
           >
             Login
-          </Button>
+          </LoadingButton>
+            
+          {message && (
+            <Alert sx ={{marginTop: 2}} severity="error" variant="filled">{message}</Alert>
+          )}
+
           <Typography marginTop={1}>
             Don't have an account?
           </Typography>

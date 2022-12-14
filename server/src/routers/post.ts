@@ -70,9 +70,8 @@ postRouter.post('/login', (req, res) => {
           const user = { accountName: accountName }; 
           
           const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-          
-          res.send({
-            "accessToken": accessToken
+          res.status(201).send({
+            accessToken: accessToken
           });
         } else {
           res.status(404).send("Incorrect password");

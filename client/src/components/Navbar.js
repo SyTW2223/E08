@@ -5,9 +5,19 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../actions/auth';
 
 export default function ButtonAppBar() {
+
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  const handleLogout = React.useCallback(() => {
+    dispatch(logout());
+  }, [dispatch]);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -35,16 +45,35 @@ export default function ButtonAppBar() {
           >
             Posts
           </Typography>
-          <Button
-            component={Link} to="/login"
-            color="inherit"
-            sx={{
-              color: 'inherit',
-              backgroundColor: 'primary.light'
-            }}
-          >
-            Login
-          </Button>
+
+          {isLoggedIn
+            ? <div>
+                <Typography>
+                  Estas logeado
+                </Typography>
+                <Button
+                  onClick={handleLogout}
+                  component={Link} to="/login"
+                  color="inherit"
+                  sx={{
+                    color: 'inherit',
+                    backgroundColor: 'primary.light'
+                  }}
+                >
+                  Sign out
+                </Button>
+              </div>
+            : <Button
+                component={Link} to='/login'
+                color="inherit"
+                sx={{
+                  color: 'inherit',
+                  backgroundColor: 'primary.light'
+                }}
+              >
+                Login
+              </Button>
+          }
         </Toolbar>
       </AppBar>
     </Box>
