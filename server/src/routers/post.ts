@@ -73,7 +73,11 @@ postRouter.post('/login', (req, res) => {
           
           const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
           res.status(201).send({
-            accessToken: accessToken
+            id: account._id,
+            username: account.username,
+            accountName: account.accountName,
+            email: account.email,
+            accessToken: accessToken,
           });
         } else {
           res.status(404).send({

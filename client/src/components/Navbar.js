@@ -15,6 +15,8 @@ import { clearMessage } from  "../actions/message";
 export default function ButtonAppBar() {
 
   const { isLoggedIn } = useSelector(state => state.auth);
+  const { user: currentUser } = useSelector(state => state.auth);
+
   const dispatch = useDispatch();
 
   let location = useLocation();
@@ -36,25 +38,24 @@ export default function ButtonAppBar() {
         <Toolbar>
           <Typography
             variant="h6"
-            noWrap
             component={Link} to='/'
             sx={{
-              mr: 3,
+              mr: 4,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.4rem',
+              letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            UTOPIA 
+            UTOPIA
           </Typography>
           
           {isLoggedIn
             ? <Grid container justifyContent="flex-end">
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  Welcome 
+                <Typography variant="h6" component="div" sx={{ mt: 0.3, flexGrow: 1 }}>
+                  Welcome, {currentUser.username}!
                 </Typography>
                 <Button
                   onClick={handleLogout}
