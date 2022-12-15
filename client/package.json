@@ -25,7 +25,6 @@
     "react-test-renderer": "^18.2.0"
   },
   "jest": {
-    "testEnvironment": "node",
     "transformIgnorePatterns": [
       "node_modules/(?!axios)"
     ]
