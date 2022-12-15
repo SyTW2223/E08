@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { render, screen } from "../test-utils";
+import { render, screen } from "../testUtils";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
