@@ -17,27 +17,27 @@ interface AccountInterface {
 const AccountSchema = new Schema<AccountInterface>({
   username: {
     type: String,
-    required: true,
+    required: [true, 'A username is required'],
     trim: true,
   },
   accountName: {
     type: String,
-    required: true,
+    required: [true, 'An account name is required'],
     unique: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'An email is required'],
     trim: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'A password is required'],
     trim: true,
   },
   description: {
     type: String,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
   },
   posts: [
     {

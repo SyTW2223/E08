@@ -18,19 +18,20 @@ export const postRouter = express.Router();
  * Stores an account with all its data in the database
  */
 postRouter.post('/signup', async (req, res) => {
-  const filter = { accountName: req.body.accountName.toString() };
+  const filter = { accountName: req.body.accountName };
   Account.findOne(filter).then(async (account) => {
     if (account === null) {
       let passwordHash = await bcryptjs.hash(req.body.password, 10);
       const account = new Account({
         username: req.body.username,
         accountName: req.body.accountName,
+        email: req.body.email,
         password: passwordHash,
         description: req.body.description,
-        email: req.body.email,
         posts: req.body.posts,
         likedPosts: req.body.likedPosts
       });
+      console.log(account);
       account.save().then(() => {
         res.status(201).send({
           message: "Account successfully created",

@@ -31,8 +31,7 @@ deleteRouter.delete('/account', authenticateToken, (req, res) => {
             res.status(400).send();
         });
     }
-}
-);
+  });
 
 /**
  * delete all the info from an account by its id
