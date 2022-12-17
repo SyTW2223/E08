@@ -1,15 +1,20 @@
 import {connect} from 'mongoose';
 
+
+const { MONGO_DB_URI, MONGO_DB_URI_TEST, NODE_ENV } = process.env
+
 /**
  * If the enviroment variable is not established,
  * connects to the url
  */
-const mongodb_url = 'mongodb+srv://SyTW:sytw123@cluster0.vrub0al.mongodb.net/?retryWrites=true&w=majority';
+const connectionString = NODE_ENV === 'test'
+  ? MONGO_DB_URI_TEST
+  : MONGO_DB_URI;
 
 /**
  * Connects to the Mongo server
  */
-connect(mongodb_url, {
+connect(connectionString as string, {
   autoIndex: true,
 }).then(() => {
   console.log('Connection to MongoDB server established');
