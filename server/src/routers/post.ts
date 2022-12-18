@@ -21,17 +21,19 @@ postRouter.post('/signup', async (req, res) => {
   const filter = { accountName: req.body.accountName };
   Account.findOne(filter).then(async (account) => {
     if (account === null) {
-      let passwordHash = await bcryptjs.hash(req.body.password, 10);
+      let password = req.body.password;
+      if (password !== undefined) {
+        password = await bcryptjs.hash(password, 10);
+      }
       const account = new Account({
         username: req.body.username,
         accountName: req.body.accountName,
         email: req.body.email,
-        password: passwordHash,
+        password: password,
         description: req.body.description,
         posts: req.body.posts,
         likedPosts: req.body.likedPosts
       });
-      console.log(account);
       account.save().then(() => {
         res.status(201).send({
           message: "Account successfully created",
@@ -44,7 +46,8 @@ postRouter.post('/signup', async (req, res) => {
         error: 'The account name is already in use',
       });
     }
-  }).catch(() => {
+  }).catch((err) => {
+    console.log(err);
     res.status(500).send();
   });
 });

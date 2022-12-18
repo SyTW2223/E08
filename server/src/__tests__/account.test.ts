@@ -56,7 +56,7 @@ describe('POST / - creation of a new account', () => {
       })
       .expect(response => {
         expect(response.status).toBe(400);
-        expect(response.body.error).toBe(
+        expect(response.body.message).toBe(
           "Account validation failed: email: An email is required"
         );
       });
@@ -72,7 +72,7 @@ describe('POST / - creation of a new account', () => {
       })
       .expect(response => {
         expect(response.status).toBe(400);
-        expect(response.body.error).toBe(
+        expect(response.body.message).toBe(
           "Account validation failed: password: A password is required"
         );
       });
