@@ -1,3 +1,6 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
 name: Coveralls
 
 on:
@@ -7,14 +10,22 @@ on:
     branches: [ "main" ]
 
 jobs:
-  coveralls:
-
+  test:
     runs-on: ubuntu-latest
-        
+    strategy:
+      matrix:
+        folder:
+          - 'client'
+          - 'server'
+  
+    env:
+      COVERALLS_PARALLEL: true
+      MONGO_DB_URI_TEST: mongodb+srv://SyTW:sytw123@cluster0.vrub0al.mongodb.net/test-app?retryWrites=true&w=majority
+
     defaults:
-      run:
-        working-directory: ./client
-      
+        run:
+          working-directory: ./${{ matrix.folder }}
+
     steps:
     - name: Cloning repo
       uses: actions/checkout@v3
@@ -24,12 +35,27 @@ jobs:
         node-version: 19.x
         cache: 'npm'
     - name: Installing dependencies
-      run: npm ci
+      run: npm install
     - name: Generating coverage information
       run: npm run coverage
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ${{ github.workspace }}/client/coverage/lcov.info
-        base-path: ${{ github.workspace }}/client
+        github-token: ${{ secrets.github_token }}
+        path-to-lcov: ${{ github.workspace }}/${{ matrix.folder }}/coverage/lcov.info
+        flag-name:  run-${{ matrix.folder }}
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
+      run:
+        command:
+          cat << ./client/coverage/lcov.info || coveralls --verbose
+          cat << ./server/coverage/lcov.info || coveralls --verbose 
