@@ -56,5 +56,5 @@ jobs:
         github-token: ${{ secrets.github_token }}
         parallel-finished: true
     - run: |
-        cat << ./client/coverage/lcov.info >> || coveralls --verbose
-        cat << ./server/coverage/lcov.info >> || coveralls --verbose
+        cat << ./client/coverage/lcov.info >> | coveralls --verbose
+        cat << ./server/coverage/lcov.info >> | coveralls --verbose
