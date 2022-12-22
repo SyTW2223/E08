@@ -38,7 +38,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ${{ github.workspace }}/client/coverage/lcov.info
-        flag-name: run-frontend
+        flag-name: run-1
         parallel: true
   
 
@@ -71,7 +71,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ${{ github.workspace }}/server/coverage/lcov.info
-        flag-name: run-backend
+        flag-name: run-2
         parallel: true
   
 
