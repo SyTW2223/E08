@@ -56,4 +56,4 @@ jobs:
         github-token: ${{ secrets.github_token }}
         parallel-finished: true
         lcov-merge: true
-        lcov-merge-pattern: ${{ github.workspace }}/*/coverage/lcov.info
+        lcov-merge-pattern: ${{ github.workspace }}/server/coverage/lcov.info ${{ github.workspace }}/client/coverage/lcov.info
