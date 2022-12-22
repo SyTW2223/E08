@@ -17,9 +17,6 @@ jobs:
         folder:
           - 'client'
           - 'server'
-        test_number:
-          - 1
-          - 2
   
     env:
       COVERALLS_PARALLEL: true
@@ -42,7 +39,7 @@ jobs:
       with:
         github-token: ${{ secrets.github_token }}
         path-to-lcov: ${{ github.workspace }}/${{ matrix.folder }}/coverage/lcov.info
-        flag-name:  run-${{ matrix.test_number }}
+        flag-name:  run-${{ matrix.folder }}
         parallel: true
 
   finish:
