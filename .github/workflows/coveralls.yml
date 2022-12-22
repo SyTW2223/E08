@@ -58,4 +58,6 @@ jobs:
         # merge lcov files
         lcov-merger: 'client/coverage/lcov.info server/coverage/lcov.info'
         lcov-merger-output: 'coverage/lcov.info'
+        path-to-lcov: 'coverage/lcov.info'
+        
 
