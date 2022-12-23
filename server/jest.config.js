@@ -2,5 +2,8 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ["./src"]
+  roots: ["./src"],
+  testRunner: 'jest-circus/runner',
+  maxWorkers: 4,
+  runInParallel: true
 };
