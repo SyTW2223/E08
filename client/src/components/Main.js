@@ -1,7 +1,23 @@
 import React from "react";
-import { Paper, Stack, Box, Container, Typography, Grid } from "@mui/material";
+import { useState } from "react";
+import { Stack, Box, Container, Typography, Paper, TextField, FormControl, Grid, Autocomplete, Button } from "@mui/material";
+import MessageIcon from '@mui/icons-material/Message';
+// import { PostsList } from "./posts/PostsList";
+
+const tags = [
+  { label: 'Science' },
+  { label: 'Computers' },
+  { label: 'Gaming' },
+  { label: 'Sports' },
+  { label: 'Music' }
+]
+
 
 export const Main = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState([]);
+
   return (
     <div className="mainContent">
       <Box marginY="2em" sx={{ width: '100%' }}>
@@ -10,41 +26,81 @@ export const Main = () => {
             backgroundColor: "#ffff",
             borderRadius: 3
           }}>
-          <Box sx={{paddingTop:"2em"}}>
-            <Typography variant="h4">
-              Posts Destacados:
-            </Typography>
-          </Box >
-          <Stack spacing={2} mt={2}>
-            <Paper elevation={5}>
-              <Box marginY="1em" marginLeft="1em"  marginRight="1em"  sx={{ width: '100%' }}>
-                <Grid>
-                  <Grid>
-                    <Typography variant="h6">
-                      Nombre del usuario 
-                    </Typography>
-                  </Grid>
-                  <Grid md="auto" sx={{marginLeft:"1em",  marginRight:"1em"}}>
-                    <Typography > 
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    </Typography>
-                  </Grid>
-                  <Grid sx={{justifyContent: "right"}}>
-                    <Box display="flex" >
-                      hola
-                    </Box>
+          <Stack>
+            <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
+              <Grid container spacing={2}>
+                <Grid item>
+                  <MessageIcon fontSize="large" sx={{marginTop:"10px"}} />
+                </Grid>
+                <Grid item xs={12} sm container>
+                  <Grid item container direction="column" spacing={2}>
+                    <Grid item >
+                      <Typography variant="body2">
+                        <FormControl sx={{ width: '100%' }}>
+                          <TextField
+                            label="Title"
+                            value={title}
+                            type={'text'}
+                            required={true}
+                            message="A post is required"
+                            multiline
+                            onChange={(e) => setTitle(e.target.value)}
+                            sx={{ width: '100%' }}
+                          ></TextField>
+                        </FormControl>
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body2">
+                        <FormControl sx={{ width: '100%' }}>
+                          <TextField
+                            label="Content"
+                            value={content}
+                            type={'text'}
+                            required={true}
+                            message="A post is required"
+                            multiline
+                            onChange={(e) => setContent(e.target.value)}
+                            sx={{ width: '100%' }}
+                          ></TextField>
+                        </FormControl>
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Autocomplete
+                        multiple
+                        value= {tag}
+                        options={tags}
+                        sx={{ width: "100%" }}
+                        required={true}
+                        onChange={(e) => setTag(e.target.value)}
+                        renderInput={(params) => <TextField {...params} label="Tags" />} />
+                    </Grid>
+                    <Grid item sx={{alignSelf: "center", width:"50%"}}>
+                      <Box padding={2} >
+                        <Button 
+                          type="submit"
+                          variant="contained" 
+                          color="inherit" 
+                          sx={{ width: "100%" }}>
+                            Post
+                          </Button>
+                      </Box>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Box>
+              </Grid>
+            </Paper>
+          </Stack>
+          <Stack>
+            <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" padding={2}>
+              <Typography variant="h5">
+                Recent Posts
+              </Typography>
+            </Box>
+          </Stack>
+          <Stack >
 
-              
-            </Paper>
-            <Paper elevation={5}>
-              <article className="post-excerpt">
-                <h3>"aaaaa"</h3>
-                <p className="post-content">"bbbbbbb"</p>
-              </article>
-            </Paper>
           </Stack>
         </Container>
       </Box>

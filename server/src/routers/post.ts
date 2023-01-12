@@ -3,11 +3,9 @@ require('dotenv').config();
 import * as express from 'express';
 import { Account } from '../models/account';
 import { Post } from '../models/post';
+import * as jwt from '../middleware/authJwt';
 
-const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
-
-import authenticateToken from '../middleware/authJwt';
 
 /**
  * Contains all the functionality to store items in the database
@@ -75,7 +73,7 @@ postRouter.post('/login', (req, res) => {
           const accountName = account.accountName;
           const user = { accountName: accountName }; 
           
-          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+          const accessToken = jwt.generateAccessToken(user);
           res.status(201).send({
             id: account._id,
             username: account.username,
@@ -99,7 +97,7 @@ postRouter.post('/login', (req, res) => {
 /**
  * Stores a post with all its data in the database
  */
- postRouter.post('/post', authenticateToken, (req, res) => {
+ postRouter.post('/post', jwt.authenticateToken, (req, res) => {
   if (!req.body.accountName) {
     res.status(400).send({
       error: 'An account name for the post must be provided',

@@ -5,12 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logout } from '../actions/auth';
-import { clearMessage } from  "../actions/message";
+import { clearMessage } from "../actions/message";
 
 export default function ButtonAppBar() {
 
@@ -51,33 +54,40 @@ export default function ButtonAppBar() {
           >
             UTOPIA
           </Typography>
-          
+
           {isLoggedIn
             ? <Grid container justifyContent="flex-end">
-                <Typography variant="h6" component="div" sx={{ mt: 0.3, flexGrow: 1 }}>
+                <Typography variant="h6" component="div" sx={{ mt: 0.5, flexGrow: 1 }}>
                   Welcome, {currentUser.username}!
                 </Typography>
-                <Button
-                  onClick={handleLogout}
+                <IconButton
+                  aria-label="profile icon of user"
+                  component={Link} to='/profile'
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <IconButton
+                  aria-label="logout"
                   component={Link} to="/login"
                   color="error"
-                  variant='outlined'
+                  onClick={handleLogout}
                 >
-                  Sign out
-                </Button>
-              </Grid>
+                  <LogoutIcon />
+                </IconButton>
+            </Grid>
             : <Grid container justifyContent="flex-end">
-                <Button
-                  component={Link} to='/login'
-                  color="inherit"
-                  sx={{
-                    color: 'inherit',
-                    backgroundColor: 'primary.light'
-                  }}
-                >
-                  Login
-                </Button>
-              </Grid>
+              <Button
+                component={Link} to='/login'
+                color="inherit"
+                sx={{
+                  color: 'inherit',
+                  backgroundColor: 'primary.light'
+                }}
+              >
+                Login
+              </Button>
+            </Grid>
           }
         </Toolbar>
       </AppBar>
