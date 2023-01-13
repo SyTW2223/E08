@@ -1,26 +1,23 @@
 import {
-    POST_SUCCES,
+    POST_SUCCESS,
     SET_MESSAGE,
     POST_FAIL_FOUND,
     POST_FAIL,
     POST_DELETE,
-    POST_CREATE
+    POST_CREATE,
+    POST_CREATE_FAIL
   } from "./types";
 
 import PostService from "../services/post.service";
 
-
-// Creador de acciones para obtener un post 
-export const getPosts = (accountName) => (dispatch) => {
-  return PostService.getPost(accountName).then(
+// Creador de acciones para settear un post 
+export const setPosts = (accountName, title, content, tags) => (dispatch) => {
+  console.log("setPosts");
+  return PostService.setPost(accountName, title, content, tags).then(
     (response) => {
       dispatch({
-        type: POST_SUCCES,
-      });
-
-      dispatch({
-        type: SET_MESSAGE,
-        payload: response.data.message,
+        type: POST_CREATE,
+        payload:  response.data ,
       });
 
       return Promise.resolve();
@@ -30,11 +27,7 @@ export const getPosts = (accountName) => (dispatch) => {
         error.response.data.error || error.message;
 
       dispatch({
-        type: POST_FAIL, 
-      });
-
-      dispatch({
-        type: SET_MESSAGE,
+        type: POST_CREATE_FAIL, 
         payload: message,
       });
 
@@ -42,4 +35,37 @@ export const getPosts = (accountName) => (dispatch) => {
     }
   )
 }
+
+// // Creador de acciones para obtener un post 
+// export const getPosts = (accountName) => (dispatch) => {
+//   return PostService.getPost(accountName).then(
+//     (response) => {
+//       dispatch({
+//         type: POST_SUCCESS,
+//       });
+
+//       dispatch({
+//         type: SET_MESSAGE,
+//         payload: response.data.message,
+//       });
+
+//       return Promise.resolve();
+//     },
+//     (error) => {
+//       const message =
+//         error.response.data.error || error.message;
+
+//       dispatch({
+//         type: POST_FAIL, 
+//       });
+
+//       dispatch({
+//         type: SET_MESSAGE,
+//         payload: message,
+//       });
+
+//       return Promise.reject();
+//     }
+//   )
+// }
   

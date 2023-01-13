@@ -10,11 +10,12 @@ export const SET_MESSAGE = "@API/SET_MESSAGE";
 export const CLEAR_MESSAGE = "@API/CLEAR_MESSAGE";
 
 // Tipos de acciones para los post de la aplicacion
-export const POST_SUCCES = "@POST/POST_FOUND"
+export const POST_SUCCESS = "@POST/POST_FOUND"
 export const POST_FAIL_FOUND = "@POST/POST_FAIL_FOUND"
 export const POST_FAIL = "@POST_FAIL"
 export const POST_DELETE = "@POST/POST_DELETE"
 export const POST_CREATE = "@POST/POST_CREATE"
+export const POST_CREATE_FAIL = "@POST/POST_CREATE_FAIL"
 
 export const POST = "@APP/Add_post";
 

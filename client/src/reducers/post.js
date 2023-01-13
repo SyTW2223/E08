@@ -1,35 +1,30 @@
 import {
-    POST_SUCCES,
+    POST_SUCCESS,
     SET_MESSAGE,
     POST_FAIL_FOUND,
     POST_FAIL,
     POST_DELETE,
-    POST_CREATE
-  } from "./types";
+    POST_CREATE,
+    POST_CREATE_FAIL
+  } from "../actions/types";
 
 
-import PostService from "../services/post.service";
+const initialState = {postStart: true};
 
-
-const user = JSON.parse(localStorage.getItem("user"));
-
-const initialState = user ? {isLoggedIn: true, user}:{isLoggedIn: false, user: null};
-
-export default function authReducer(state = initialState, action) {
+export default function PostReducer(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case POST_SUCCESS:
+    case POST_CREATE:
       return {
         ...state,
-        postFound: true,
-        posts: payload.posts,
+        postCreate: true,
+        content: payload.content
       };
-    case POST_FAIL:
+    case POST_CREATE_FAIL:
       return {
         ...state,
-        postFound: false,
-        posts: [],
+        postCreate: false,
       };
     default:
       return state;
