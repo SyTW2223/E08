@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import MessageIcon from '@mui/icons-material/Message';
 
-import { setPosts } from '../actions/post';
+import { Posts } from '../actions/post';
 
 const tags = [
   'Science',
@@ -35,14 +35,15 @@ export const Main = () => {
     console.log("handlePost");
     console.log(currentUser.accountName, title, content, tag);
     const nameAcount = currentUser.accountName;
-    dispatch(setPosts(nameAcount, title, content, tag).then(() => {
+    dispatch(Posts(nameAcount, title, content, tag)).then(() => {
         setPostCreate(true);
       }).catch(() => {
         setPostCreate(false);
-      }));
+      });
   }
 
   const handleChange = (event) => {
+    console.log("handleChange");
     const {
       target: { value },
     } = event;

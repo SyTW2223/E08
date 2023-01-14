@@ -1,9 +1,4 @@
 import {
-    POST_SUCCESS,
-    SET_MESSAGE,
-    POST_FAIL_FOUND,
-    POST_FAIL,
-    POST_DELETE,
     POST_CREATE,
     POST_CREATE_FAIL
   } from "./types";
@@ -11,15 +6,14 @@ import {
 import PostService from "../services/post.service";
 
 // Creador de acciones para settear un post 
-export const setPosts = (accountName, title, content, tags) => (dispatch) => {
-  console.log("setPosts");
+export const Posts = (accountName, title, content, tags) => (dispatch) => {
+  console.log("Posts");
   return PostService.setPost(accountName, title, content, tags).then(
     (response) => {
       dispatch({
         type: POST_CREATE,
         payload:  response.data ,
       });
-
       return Promise.resolve();
     },
     (error) => {

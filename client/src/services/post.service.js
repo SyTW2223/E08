@@ -3,28 +3,33 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000/";
 
-export const setPost = (accountName, title, content, tags) => {
+const setPost = (accountName, title, content, tags) => {
   console.log("setPost");
-  const token = JSON.parse(localStorage.getItem('user')).accessToken;
-  return axios.post(API_URL + "/post" ,{
-      "accountName": accountName,
-      "authorization": "Bearer: " + token,
-      "title": title,
-      "content": content,
-      "tags": tags
+  const token = "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken;
+  return axios.post(API_URL + "post", {
+    "accountName": accountName,
+    "title": title,
+    "content": content,
+    "tags": tags
+  }, {
+    headers: {
+      authorization: token,
+    }
+  }
+  );
+};
+
+
+const getPost = (accountName) => {
+  return axios.get(API_URL + "post", {
+    "accountName": accountName,
+    "authorization": "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken,
   });
 };
 
-
-export const getPost = (accountName) => {
-    return axios.get(API_URL + "post", {
-        "accountName": accountName,
-        "authorization": "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken,
-    });
-};
-
-
-export default {
+const postService = {
   setPost,
   getPost
 };
+
+export default postService;
