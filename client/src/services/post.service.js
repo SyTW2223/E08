@@ -4,7 +4,6 @@ import axios from "axios";
 const API_URL = "http://localhost:8000/";
 
 const setPost = (accountName, title, content, tags) => {
-  console.log("setPost");
   const token = "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken;
   return axios.post(API_URL + "post", {
     "accountName": accountName,
@@ -20,16 +19,14 @@ const setPost = (accountName, title, content, tags) => {
 };
 
 
-const getPost = (accountName) => {
-  return axios.get(API_URL + "post", {
-    "accountName": accountName,
-    "authorization": "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken,
+const getPosts = () => {
+  return axios.get(API_URL + "posts", {
   });
 };
 
 const postService = {
   setPost,
-  getPost
+  getPosts
 };
 
 export default postService;

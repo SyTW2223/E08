@@ -1,13 +1,14 @@
 import {
     POST_CREATE,
-    POST_CREATE_FAIL
+    POST_CREATE_FAIL,
+    POST_SUCCESS,
+    POST_FAIL_FOUND
   } from "./types";
 
 import PostService from "../services/post.service";
 
 // Creador de acciones para settear un post 
 export const Posts = (accountName, title, content, tags) => (dispatch) => {
-  console.log("Posts");
   return PostService.setPost(accountName, title, content, tags).then(
     (response) => {
       dispatch({
@@ -30,36 +31,28 @@ export const Posts = (accountName, title, content, tags) => (dispatch) => {
   )
 }
 
-// // Creador de acciones para obtener un post 
-// export const getPosts = (accountName) => (dispatch) => {
-//   return PostService.getPost(accountName).then(
-//     (response) => {
-//       dispatch({
-//         type: POST_SUCCESS,
-//       });
+// Creador de acciones para obtener un post 
+export const getAllPosts = () => (dispatch) => {
+  return PostService.getPosts().then(
+    (response) => {
+      dispatch({
+        type: POST_SUCCESS,
+        payload:  response.data
+      });
 
-//       dispatch({
-//         type: SET_MESSAGE,
-//         payload: response.data.message,
-//       });
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        error.response.data.error || error.message;
 
-//       return Promise.resolve();
-//     },
-//     (error) => {
-//       const message =
-//         error.response.data.error || error.message;
+      dispatch({
+        type: POST_FAIL_FOUND, 
+        payload: message,
+      });
 
-//       dispatch({
-//         type: POST_FAIL, 
-//       });
-
-//       dispatch({
-//         type: SET_MESSAGE,
-//         payload: message,
-//       });
-
-//       return Promise.reject();
-//     }
-//   )
-// }
+      return Promise.reject();
+    }
+  )
+}
   

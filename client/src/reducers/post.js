@@ -1,15 +1,12 @@
 import {
     POST_SUCCESS,
-    SET_MESSAGE,
     POST_FAIL_FOUND,
-    POST_FAIL,
-    POST_DELETE,
     POST_CREATE,
     POST_CREATE_FAIL
   } from "../actions/types";
 
 
-const initialState = {postStart: true};
+const initialState = {postStart: true, postCreate: false, postFound: false, posts: null};
 
 export default function PostReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -25,6 +22,17 @@ export default function PostReducer(state = initialState, action) {
       return {
         ...state,
         postCreate: false,
+      };
+    case POST_SUCCESS:
+      return {
+        ...state,
+        postFound: true,
+        posts: payload.reverse(),
+      };
+    case POST_FAIL_FOUND:
+      return {
+        ...state,
+        postFound: false,
       };
     default:
       return state;
