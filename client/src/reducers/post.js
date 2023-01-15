@@ -2,11 +2,13 @@ import {
     POST_SUCCESS,
     POST_FAIL_FOUND,
     POST_CREATE,
-    POST_CREATE_FAIL
+    POST_CREATE_FAIL,
+    POST_LIKE,
+    POST_LIKE_FAIL,
   } from "../actions/types";
 
 
-const initialState = {postStart: true, postCreate: false, postFound: false, posts: null};
+const initialState = {postStart: true, postCreate: false, postFound: false, postLike:false, posts: []};
 
 export default function PostReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -33,6 +35,22 @@ export default function PostReducer(state = initialState, action) {
       return {
         ...state,
         postFound: false,
+      };
+    case POST_LIKE:
+      const estado = state;
+      const hola = estado.posts;
+      const postIndex = hola.findIndex(post => post._id === payload._id);
+      hola[postIndex] = payload;
+
+      return {
+        ...state,
+        postLike: true,
+        posts: hola,
+      };
+    case POST_LIKE_FAIL:
+      return {
+        ...state,
+        postLike: false,
       };
     default:
       return state;

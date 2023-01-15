@@ -24,9 +24,24 @@ const getPosts = () => {
   });
 };
 
+const likePosts = (id, accountLike) => {
+  const token = "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken;
+  return axios.patch(API_URL + "like", {
+    "postID": id,
+    "accountLike": accountLike
+  }, {
+    headers: {
+      authorization: token,
+    }, 
+  }, 
+    { withCredentials: true }
+  );
+};
+
 const postService = {
   setPost,
-  getPosts
+  getPosts,
+  likePosts
 };
 
 export default postService;

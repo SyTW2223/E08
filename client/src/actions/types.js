@@ -16,6 +16,8 @@ export const POST_FAIL = "@POST_FAIL"
 export const POST_DELETE = "@POST/POST_DELETE"
 export const POST_CREATE = "@POST/POST_CREATE"
 export const POST_CREATE_FAIL = "@POST/POST_CREATE_FAIL"
+export const POST_LIKE = "@POST/POST_LIKE"
+export const POST_LIKE_FAIL = "@POST/POST_LIKE_FAIL"
 
 export const POST = "@APP/Add_post";
 

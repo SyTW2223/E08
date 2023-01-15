@@ -22,7 +22,7 @@ export const PostsList = () => {
   if (postFound) {
     return (
       <Stack> 
-        { posts.map((post) => <Post title={post.title} accountName={post.accountName} content={post.content} likes={1} tags={post.tags}/> ) }
+        { posts.map((post, index) => <Post id={post._id} title={post.title} accountName={post.accountName} content={post.content} index={index} tags={post.tags}/> ) }
       </Stack>
     )
   } else {

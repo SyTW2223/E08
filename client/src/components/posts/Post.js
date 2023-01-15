@@ -1,8 +1,17 @@
-import { Paper, Box, Typography, Grid } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Paper, Box, Typography, Grid, IconButton } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { likePost } from "../../actions/post";
 
-export const Post = ({ title, accountName, content, likes, tags }) => {
+const ButtonLikeHandler = (id, accountLike,dispatch) => {
+    dispatch(likePost(id, accountLike));
+}
+
+export const Post = ({ id, title, accountName, content, index, tags }) => {
+    const dispatch = useDispatch();
+    const currentPosts = useSelector(state => state.post.posts);
+
     return (
         <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
             <Grid container spacing={2}>
@@ -33,10 +42,14 @@ export const Post = ({ title, accountName, content, likes, tags }) => {
                                 </Typography>
                             </Box>
                             <Box display="flex" flexDirection="row" alignItems="right" justifyContent="right">
-                                <Typography variant="body2">
-                                    {likes}
+                                <Typography variant="subtitle1" fontSize="1.5em">
+                                    {currentPosts[index].likesFromAccounts.length}
                                 </Typography>
-                                <FavoriteBorderIcon />
+                                <IconButton
+                                    aria-label="like"
+                                    onClick={() => ButtonLikeHandler(id, JSON.parse(localStorage.getItem('user')).accountName, dispatch)}>
+                                    <FavoriteBorderIcon />
+                                </IconButton>
                             </Box>
                         </Grid>
                     </Grid>
