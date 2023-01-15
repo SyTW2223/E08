@@ -27,18 +27,17 @@ export const Post = ({ title, accountName, content, likes, tags }) => {
                         </Grid>
                         <Grid item>
                             <hr />
+                            <Box display="flex" flexDirection="row" alignItems="left" justifyContent="left">
+                                <Typography variant="body2">
+                                    Tags: {String(tags).replace(/,/g, ", ")}
+                                </Typography>
+                            </Box>
                             <Box display="flex" flexDirection="row" alignItems="right" justifyContent="right">
                                 <Typography variant="body2">
                                     {likes}
                                 </Typography>
                                 <FavoriteBorderIcon />
                             </Box>
-                        </Grid>
-                        <Grid item>
-
-                            <Typography variant="body2">
-                                Tags: {String(tags)}
-                            </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
