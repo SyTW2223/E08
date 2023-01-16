@@ -39,15 +39,10 @@ export default function PostReducer(state = initialState, action) {
         postFound: false,
       };
     case POST_LIKE:
-      const estado = state;
-      const hola = estado.posts;
-      const postIndex = hola.findIndex(post => post._id === payload._id);
-      hola[postIndex] = payload;
-
       return {
         ...state,
         postLike: true,
-        posts: hola,
+        posts: state.posts.map(post => post._id === payload._id ? payload : post)
       };
     case POST_LIKE_FAIL:
       return {
@@ -55,15 +50,10 @@ export default function PostReducer(state = initialState, action) {
         postLike: false,
       };
     case POST_DELETE:
-      const estado2 = state;
-      const hola2 = estado2.posts;
-      const postIndex2 = hola2.findIndex(post => post._id === payload._id);
-      hola2.splice(postIndex2, 1);
-
       return {
         ...state,
         postDelete: true,
-        posts: hola2,
+        posts: state.posts.filter(post => post._id !== payload._id)
       };
     case POST_DELETE_FAIL:
       return {

@@ -36,7 +36,7 @@ export const Post = ({ id, title, accountName, content, index, tags }) => {
             : null}
             <Grid container spacing={2}>
                 <Grid item>
-                    <AccountCircleIcon Size="3em" sx={{ marginTop: "6px" }} />
+                    <AccountCircleIcon size="3em" sx={{ marginTop: "6px" }} />
                 </Grid>
                 <Grid item xs={12} sm container>
                     <Grid item xs container direction="column" spacing={2}>
