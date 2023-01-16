@@ -2,18 +2,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { Paper, Box, Typography, Grid, IconButton } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { likePost } from "../../actions/post";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const ButtonLikeHandler = (id, accountLike,dispatch) => {
+import { likePost } from "../../actions/post";
+import { deletePost } from "../../actions/post";
+
+
+const ButtonLikeHandler = (id, accountLike, dispatch) => {
+    console.log("like");
     dispatch(likePost(id, accountLike));
 }
+
+const ButtonDeleteHandler = (id, accountDelete, dispatch) => {
+    console.log("delete");
+    dispatch(deletePost(id, accountDelete));
+}
+
 
 export const Post = ({ id, title, accountName, content, index, tags }) => {
     const dispatch = useDispatch();
     const currentPosts = useSelector(state => state.post.posts);
+    const { isLoggedIn } = useSelector(state => state.auth);
+    const { user: currentUser } = useSelector(state => state.auth);
 
     return (
         <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
+            {isLoggedIn && accountName === currentUser.accountName 
+            ? <Box display="flex" alignItems="right" float="right" justifyContent="right">
+                <IconButton aria-label="delete" onClick={() => ButtonDeleteHandler(id, currentUser.accountName , dispatch)} sx={{ justifyContent: "right" }}>
+                    <DeleteForeverIcon />
+                </IconButton>
+            </Box>
+            : null}
             <Grid container spacing={2}>
                 <Grid item>
                     <AccountCircleIcon Size="3em" sx={{ marginTop: "6px" }} />
@@ -47,7 +67,7 @@ export const Post = ({ id, title, accountName, content, index, tags }) => {
                                 </Typography>
                                 <IconButton
                                     aria-label="like"
-                                    onClick={() => ButtonLikeHandler(id, JSON.parse(localStorage.getItem('user')).accountName, dispatch)}>
+                                    onClick={() => ButtonLikeHandler(id, currentUser.accountName , dispatch)}>
                                     <FavoriteBorderIcon />
                                 </IconButton>
                             </Box>

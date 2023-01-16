@@ -5,6 +5,8 @@ import {
   POST_FAIL_FOUND,
   POST_LIKE,
   POST_LIKE_FAIL,
+  POST_DELETE,
+  POST_DELETE_FAIL,
 } from "./types";
 import PostService from "../services/post.service";
 
@@ -81,3 +83,27 @@ export const likePost = (id, accountLike) => (dispatch) => {
     }
   )
 }
+
+export const deletePost = (id, accountDelete) => (dispatch) => {
+  return PostService.deletePosts(id, accountDelete).then(
+    (response) => {
+      dispatch({
+        type: POST_DELETE,
+        payload: response.data,
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        error.response.data.error || error.message;
+
+      dispatch({
+        type: POST_DELETE_FAIL,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  )
+} 

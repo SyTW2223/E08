@@ -32,16 +32,28 @@ const likePosts = (id, accountLike) => {
   }, {
     headers: {
       authorization: token,
-    }, 
-  }, 
+    },
+  },
     { withCredentials: true }
   );
 };
 
-const postService = {
-  setPost,
-  getPosts,
-  likePosts
+const deletePosts = (id, accountDelete) => {
+  const token = "Bearer " + JSON.parse(localStorage.getItem('user')).accessToken;
+  return axios.delete(API_URL + "post", { headers: {
+    authorization: token,
+  },
+  data: {
+    "postID": id,
+    "accountName": accountDelete
+  }});
 };
 
-export default postService;
+  const postService = {
+    setPost,
+    getPosts,
+    likePosts,
+    deletePosts
+  };
+
+  export default postService;
