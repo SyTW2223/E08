@@ -38,6 +38,7 @@ const AccountSchema = new Schema<AccountInterface>({
   },
   description: {
     type: String,
+    default: "",
   },
   posts: [
     {
