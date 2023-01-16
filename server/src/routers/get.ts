@@ -21,7 +21,14 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
       if (account === null) {
         res.status(404).send("No account found");
       } else {
-        res.send(account);
+        res.send({
+          username: account.username,
+          accountName: account.accountName,
+          email: account.email,
+          description: account.description,
+          posts: account.posts,
+          likedPosts: account.likedPosts
+        });
       }
     }).catch(() => {
       res.status(500).send();
@@ -38,7 +45,14 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
     if (!account) {
       res.status(404).send("No account was found");
     } else {
-      res.send(account);
+      res.send({
+        username: account.username,
+        accountName: account.accountName,
+        email: account.email,
+        description: account.description,
+        posts: account.posts,
+        likedPosts: account.likedPosts
+      });
     }
   }).catch(() => {
     res.status(500).send();
