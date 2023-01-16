@@ -73,7 +73,7 @@ export const login = (accountName, password)=> (dispatch) => {
 
 
 // Creador de acciones para salir de la sesión
-export const logout= () => (dispatch) => {
+export const logout = () => (dispatch) => {
   AuthService.logout();
 
   dispatch({

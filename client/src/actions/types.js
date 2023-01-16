@@ -18,4 +18,8 @@ export const POST_CREATE = "@POST/POST_CREATE"
 
 export const POST = "@APP/Add_post";
 
+// Tipos de acciones para los perfiles de la aplicación
+export const PROFILE_SUCCESS = "PROFILE_SUCCESS"
+export const PROFILE_FAIL = "PROFILE_FAIL"
+
 
