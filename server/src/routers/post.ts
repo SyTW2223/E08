@@ -109,13 +109,10 @@ postRouter.post('/login', (req, res) => {
           error: 'Account not found',
         });
       } else {
-        let passwordHash = await bcryptjs.hash(req.body.password, 10);
         const newPost = new Post({
           title: req.body.title,
           content: req.body.content,
           accountName: req.body.accountName,
-          password: passwordHash,
-          likesFromAccounts: req.body.likesFromAccounts,
           tags: req.body.tags
         });
 

@@ -59,3 +59,38 @@ deleteRouter.delete('/account/:id', jwt.authenticateToken, (req, res) => {
     });
 
 });
+
+/**
+ * delete a post by its id  
+ * */
+deleteRouter.delete('/post', jwt.authenticateToken, (req, res) => {
+    if(!req.body.postID || !req.body.accountName){
+        res.status(400).send({
+            error: 'A post ID must be provided', 
+        });
+        return;
+    } else {
+        const filter = { _id: req.body.postID };
+        Post.findOne(filter).then((post) => {
+            if (!post) {
+                res.status(404).send();
+            } else {
+                if(post.accountName === req.body.accountName){
+                    Post.findByIdAndDelete(post._id).then((post) => {
+                        if (!post) {
+                            res.status(404).send();
+                        } else {
+                            res.send(post);
+                        }
+                    }).catch(() => {
+                        res.status(400).send();
+                    });
+                } else {
+                    res.status(400).send();
+                }
+            }
+        }).catch(() => {
+            res.status(400).send();
+        });
+    }
+});

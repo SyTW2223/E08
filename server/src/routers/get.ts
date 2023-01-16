@@ -81,3 +81,18 @@ getRouter.get('/post/:id', jwt.authenticateToken, (req, res) => {
     res.status(500).send();
   });
 });
+
+/**
+ * Gets all the posts
+ */
+getRouter.get('/posts', (req, res) => {
+  Post.find({}).then((posts) => {
+    if (posts.length !== 0) {
+      res.send(posts);
+    } else {
+      res.status(404).send("No posts were found");
+    }
+  }).catch(() => {
+    res.status(500).send();
+  });
+});
