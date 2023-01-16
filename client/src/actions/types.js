@@ -22,4 +22,8 @@ export const POST_LIKE_FAIL = "@POST/POST_LIKE_FAIL"
 
 export const POST = "@APP/Add_post";
 
+// Tipos de acciones para los perfiles de la aplicación
+export const PROFILE_SUCCESS = "PROFILE_SUCCESS"
+export const PROFILE_FAIL = "PROFILE_FAIL"
+
 
