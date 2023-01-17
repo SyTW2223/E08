@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,26 +56,38 @@ export default function ButtonAppBar() {
             UTOPIA
           </Typography>
 
+          {!["/", "/main"].includes(location.pathname)
+            ? <IconButton
+              aria-label="back to main"
+              component={Link} to="/login"
+              edge='start'
+              sx={{ display: { xs: 'flex', md: 'none', marginRight: '0.25em'} }}
+            >
+              <ArrowBackIosNewIcon />
+            </IconButton>
+            : null
+          }
+
           {isLoggedIn
             ? <Grid container justifyContent="flex-end">
-                <Typography variant="h6" component="div" sx={{ mt: 0.5, flexGrow: 1 }}>
-                  Welcome, {currentUser.username}!
-                </Typography>
-                <IconButton
-                  aria-label="profile icon of user"
-                  component={Link} to='/profile'
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <IconButton
-                  aria-label="logout"
-                  component={Link} to="/login"
-                  color="error"
-                  onClick={handleLogout}
-                >
-                  <LogoutIcon />
-                </IconButton>
+              <Typography variant="h6" component="div" sx={{ mt: 0.5, flexGrow: 1 }}>
+                Welcome, {currentUser.username}!
+              </Typography>
+              <IconButton
+                aria-label="profile icon of user"
+                component={Link} to='/profile'
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <IconButton
+                aria-label="logout"
+                component={Link} to="/login"
+                color="error"
+                onClick={handleLogout}
+              >
+                <LogoutIcon />
+              </IconButton>
             </Grid>
             : <Grid container justifyContent="flex-end">
               <Button

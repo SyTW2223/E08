@@ -99,7 +99,7 @@ getRouter.get('/post/:id', jwt.authenticateToken, (req, res) => {
 /**
  * Gets all the posts
  */
-getRouter.get('/posts', (req, res) => {
+getRouter.get('/posts', (_, res) => {
   Post.find({}).then((posts) => {
     if (posts.length !== 0) {
       res.send(posts);
