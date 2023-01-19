@@ -61,13 +61,21 @@ const deletePosts = (id, accountDelete) => {
   });
 };
 
+const paginationPosts = (page) => {
+  return axios.get(API_URL + "postsByPage", {
+    params: {
+      page: page,
+    }
+  });
+};
 
 const postService = {
   setPost,
   getPosts,
   getPostsFromIds,
   likePosts,
-  deletePosts
+  deletePosts,
+  paginationPosts
 };
 
 export default postService;

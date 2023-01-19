@@ -59,6 +59,31 @@ getRouter.get('/account/:id', jwt.authenticateToken, (req, res) => {
   });
 });
 
+/**
+ * Returns posts from the database based on pagination system
+ */
+getRouter.get('/postsByPage', (req, res) => {
+  let perPage = 5;
+  let page = Number(req.query.page)|| 1;
+  Post.countDocuments()
+    .then((count) => {
+      Post.find({})
+        .sort({ _id: -1 })
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((posts) => {
+          res.send({
+            posts: posts,
+            current: page,
+            pages: Math.ceil(count / perPage)
+          });
+        })
+    })
+    .catch(() => {
+      res.status(500).send();
+    });
+});
+
 
 /**
  * Gets all the info from posts by its title

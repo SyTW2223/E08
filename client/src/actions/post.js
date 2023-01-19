@@ -7,6 +7,8 @@ import {
   POST_LIKE_FAIL,
   POST_DELETE,
   POST_DELETE_FAIL,
+  PAGINATED_POST_SUCCESS,
+  PAGINATED_POST_FAIL,
 } from "./types";
 import PostService from "../services/post.service";
 
@@ -58,6 +60,31 @@ export const getAllPosts = () => (dispatch) => {
     }
   )
 }
+
+// Creador de acciones para obtener los posts paginados 
+export const getPagedPost = (page) => (dispatch) => {
+  return PostService.paginationPosts(page).then(
+    (response) => {
+      dispatch({
+        type: PAGINATED_POST_SUCCESS,
+        payload: response.data
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        error.response.data.error || error.message;
+
+      dispatch({
+        type: PAGINATED_POST_FAIL,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  );
+};
 
 // Creador de acciones para obtener posts por sus ids
 export const getPostsFromIds = (ids) => (dispatch) => {
@@ -132,3 +159,4 @@ export const deletePost = (id, accountDelete) => (dispatch) => {
     }
   )
 }
+

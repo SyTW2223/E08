@@ -20,6 +20,9 @@ export const POST_CREATE_FAIL = "@POST/POST_CREATE_FAIL"
 export const POST_LIKE = "@POST/POST_LIKE"
 export const POST_LIKE_FAIL = "@POST/POST_LIKE_FAIL"
 
+export const PAGINATED_POST_SUCCESS = '@POST/PAGINATED_POST_SUCCESS'
+export const PAGINATED_POST_FAIL = '@POST/PAGINATED_POST_FAIL'
+
 export const POST = "@APP/Add_post";
 
 // Tipos de acciones para los perfiles de la aplicación

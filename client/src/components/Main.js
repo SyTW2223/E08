@@ -10,7 +10,8 @@ import MessageIcon from '@mui/icons-material/Message';
 
 import { PostsList } from "./posts/PostsList";
 import { Posts } from '../actions/post';
-import { getAllPosts } from '../actions/post';
+import { getPagedPost } from '../actions/post';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 const tags = [
@@ -32,10 +33,12 @@ export const Main = () => {
   const { user: currentUser } = useSelector(state => state.auth);
   const { posts: currentPosts} = useSelector(state => state.post);
   const dispatch = useDispatch();
+  const nextPage = useSelector(state => state.post.next);
+  const totalPages = useSelector(state => state.post.totalPages);
 
   React.useEffect(() => {
-    dispatch(getAllPosts());
-  }, []);
+    dispatch(getPagedPost(1));
+  }, [dispatch]);
 
   const handlePost = (e) => {
     const nameAccount = currentUser.accountName;
@@ -44,6 +47,14 @@ export const Main = () => {
     }).catch(() => {
       setPostCreate(false);
     });
+  }
+
+  const HasMore = () => {
+    if (nextPage <= totalPages) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const handleChange = (event) => {
@@ -169,7 +180,20 @@ export const Main = () => {
             </Box>
           </Stack>
           <Stack >
-            <PostsList posts={currentPosts} />
+            <InfiniteScroll
+              dataLength={currentPosts.length || 0}
+              hasMore={HasMore}
+              next = {() => {
+                dispatch(getPagedPost(nextPage));
+              } }
+              loader={
+                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
+                  <h4>Loading...</h4>
+                </Box>
+              }
+              >
+              <PostsList posts={currentPosts} />
+            </InfiniteScroll>
           </Stack>
         </Container>
       </Box>

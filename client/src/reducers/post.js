@@ -7,10 +7,12 @@ import {
     POST_LIKE_FAIL,
     POST_DELETE,
     POST_DELETE_FAIL,
+    PAGINATED_POST_SUCCESS,
+    PAGINATED_POST_FAIL
   } from "../actions/types";
 
 
-const initialState = {postStart: true, postCreate: false, postFound: false, postLike:false, posts: []};
+const initialState = {postStart: true, postCreate: false, postFound: false, next:1 , totalPages:1, postLike:false, posts: []};
 
 export default function PostReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -59,6 +61,22 @@ export default function PostReducer(state = initialState, action) {
       return {
         ...state,
         postDelete: false,
+      };
+    case PAGINATED_POST_SUCCESS:
+      const next = Number(Number(payload.current) + Number(1));
+      const posts = payload.posts.filter(post => !state.posts.includes(post));
+      return {
+        ...state,
+        postFound: true,
+        posts: state.posts.concat(posts),
+        next: next,
+        current: payload.current,
+        totalPages: payload.pages,
+      };
+    case PAGINATED_POST_FAIL:
+      return {
+        ...state,
+        postFound: false,
       };
     default:
       return state;
