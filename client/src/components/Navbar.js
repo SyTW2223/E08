@@ -59,7 +59,7 @@ export default function ButtonAppBar() {
           {!["/", "/main"].includes(location.pathname)
             ? <IconButton
               aria-label="back to main"
-              component={Link} to="/login"
+              component={Link} to="/"
               edge='start'
               sx={{ display: { xs: 'flex', md: 'none', marginRight: '0.25em'} }}
             >

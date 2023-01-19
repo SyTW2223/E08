@@ -6,7 +6,6 @@ import * as ProfileService from "../services/profile.service";
 export const profile = (accountName) => (dispatch) => {
   return ProfileService.getProfile(accountName).then(
     (response) => {
-      console.log(response.data)
       dispatch({
         type: PROFILE_SUCCESS,
         payload: response.data

@@ -71,8 +71,8 @@ postRouter.post('/login', (req, res) => {
         let compare = await bcryptjs.compare(passwd, account.password);
         if (compare) {
           const accountName = account.accountName;
-          const user = { accountName: accountName }; 
-          
+          const user = { accountName: accountName };
+
           const accessToken = jwt.generateAccessToken(user);
           res.status(201).send({
             id: account._id,
@@ -97,7 +97,7 @@ postRouter.post('/login', (req, res) => {
 /**
  * Stores a post with all its data in the database
  */
- postRouter.post('/post', jwt.authenticateToken, (req, res) => {
+postRouter.post('/post', jwt.authenticateToken, (req, res) => {
   if (!req.body.accountName) {
     res.status(400).send({
       error: 'An account name for the post must be provided',
@@ -130,4 +130,17 @@ postRouter.post('/login', (req, res) => {
       }
     });
   }
+});
+
+/**
+ * Returns all the posts from a list of ids
+ */
+postRouter.post('/idposts', (req, res) => {
+  Post.find({ '_id': { $in: req.body.idsPosts } })
+    .then((posts) => {
+      res.send(posts);
+    })
+    .catch(() => {
+      res.status(500).send();
+    });
 });

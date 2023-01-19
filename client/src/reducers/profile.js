@@ -4,9 +4,7 @@ import {
 } from "../actions/types";
 
 
-const user = JSON.parse(localStorage.getItem("user"));
-
-const initialState = user ? {isLoggedIn: true, user}:{isLoggedIn: false, user: null};
+const initialState = { description: "", posted: [], likedPosts: [] };
 
 export default function profileReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -21,5 +19,5 @@ export default function profileReducer(state = initialState, action) {
       };
     default:
       return state;
-    }
   }
+}

@@ -8,8 +8,10 @@ import {
 } from "@mui/material";
 import MessageIcon from '@mui/icons-material/Message';
 
-import { Posts } from '../actions/post';
 import { PostsList } from "./posts/PostsList";
+import { Posts } from '../actions/post';
+import { getAllPosts } from '../actions/post';
+
 
 const tags = [
   'Science',
@@ -25,11 +27,15 @@ export const Main = () => {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState([]);
   const [postCreate, setPostCreate] = useState(false);
+
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
-
+  const { posts: currentPosts} = useSelector(state => state.post);
   const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
 
   const handlePost = (e) => {
     const nameAcount = currentUser.accountName;
@@ -164,7 +170,7 @@ export const Main = () => {
             </Box>
           </Stack>
           <Stack >
-            <PostsList />
+            <PostsList posts={currentPosts} />
           </Stack>
         </Container>
       </Box>

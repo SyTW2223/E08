@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
 import { profile } from '../actions/profile';
-import { logout } from "../actions/auth";
 
-import { Post } from './posts/Post';
-import { PostsList } from './posts/PostsList';
-
+import { IdPostsList } from './posts/IdPostsList';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -20,7 +17,6 @@ import userProfile from '../assets/images/user_profile_icon.png';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -30,8 +26,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+        <Box marginTop={3}>
+          <IdPostsList idPosts={children} />
         </Box>
       )}
     </div>
@@ -40,39 +36,46 @@ function TabPanel(props) {
 
 
 export const Profile = () => {
-  let navigate = useNavigate();
-
-  const [description, setDescription] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
+  // const [username, setUsername] = useState("");
+  // const [account, setAccount] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [description, setDescription] = useState("");
   const [profileLoaded, setProfileLoaded] = useState(false);
 
   const [value, setValue] = useState(0);
 
+  const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { profile: profileInfo } = useSelector((state) => state.profile);
+  const { description } = useSelector((state) => state.profile);
+  const { posted } = useSelector((state) => state.profile);
+  const { liked } = useSelector((state) => state.profile);
 
   const dispatch = useDispatch();
+
+  const LoadProfile = (() => {
+    React.useEffect(() => {
+      dispatch(profile(currentUser.accountName))
+        .then(() => {
+          // setUsername(currentUser.username);
+          // setAccount(currentUser.accountName);
+          // setEmail(currentUser.email);
+          // setDescription(profileInfo.description);
+          setProfileLoaded(true);
+        }).catch(() => {
+          setProfileLoaded(false);
+        });
+    }, []);
+  });
+
+  if (!isLoggedIn) {
+    return <Navigate to='/login' />
+  } else {
+    LoadProfile();
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  React.useEffect(() => {
-    dispatch(profile(currentUser.accountName))
-      .then(() => {
-        setProfileLoaded(true);
-        setDescription(profile.description);
-        setPosts(profile.posts);
-        setLikedPosts(profile.likedPosts);
-      }).catch(() => {
-        setProfileLoaded(false);
-      });
-  }, []);
-
-  if (!currentUser) {
-    return <Navigate to="/login" />;
-  }
 
   const profileStyle = {
     maxWidth: '290px',
@@ -96,7 +99,7 @@ export const Profile = () => {
       >
         <Grid container alignItems="center" justifyContent="center">
           <Grid container xs={12} md={4} justifyContent="center">
-            <img src={userProfile} style={profileStyle}></img>
+            <img src={userProfile} alt="profile" style={profileStyle}></img>
           </Grid>
           <Grid container xs={12} md={6}>
             <Grid item xs={4} md={4}>
@@ -125,9 +128,9 @@ export const Profile = () => {
               </Typography>
             </Grid>
             <Grid item xs={8} md={8}>
-              {currentUser.description
+              {description
                 ? <Typography variant="h6" padding={3}>
-                  {currentUser.description}
+                  {description}
                 </Typography>
                 : <Typography variant="body1" padding={3.5}>
                   No description has been provided.
@@ -146,26 +149,33 @@ export const Profile = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Box sx={{ width: '100%' }}>
-          <hr />
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            aria-label="wrapped label tabs example"
-            centered
-          >
-            <Tab label="My posts" value={0} />
-            <Tab label="Posts liked" value={1} />
-          </Tabs>
+        <Box sx={{ width: '100%', mt: '1.2em' }}>
+          <Box sx={{ borderBottom: 2, borderColor: 'divider' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              textColor="secondary"
+              indicatorColor="secondary"
+              aria-label="wrapped label tabs example"
+              variant="fullWidth"
+              centered
+            >
+              <Tab label="My posts" value={0} />
+              <Tab label="Posts liked" value={1} />
+            </Tabs>
+          </Box>
+          {profileLoaded
+            ? <div>
+              <TabPanel value={value} index={0}>
+                {posted}
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                {liked}
+              </TabPanel>
+            </div>
+            : null
+          }
         </Box>
-        <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
       </Box>
     </div>
   )
