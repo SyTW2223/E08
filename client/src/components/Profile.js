@@ -48,7 +48,7 @@ export const Profile = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const { description } = useSelector((state) => state.profile);
   const { posted } = useSelector((state) => state.profile);
-  const { liked } = useSelector((state) => state.profile);
+  const { likedPosts } = useSelector((state) => state.profile);
 
   const dispatch = useDispatch();
 
@@ -170,7 +170,7 @@ export const Profile = () => {
                 {posted}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {liked}
+                {likedPosts}
               </TabPanel>
             </div>
             : null
