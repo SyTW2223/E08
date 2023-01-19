@@ -38,10 +38,9 @@ export const Main = () => {
   }, []);
 
   const handlePost = (e) => {
-    const nameAcount = currentUser.accountName;
-    dispatch(Posts(nameAcount, title, content, tag)).then(() => {
+    const nameAccount = currentUser.accountName;
+    dispatch(Posts(nameAccount, title, content, tag)).then(() => {
       setPostCreate(true);
-
     }).catch(() => {
       setPostCreate(false);
     });
