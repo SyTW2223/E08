@@ -15,3 +15,22 @@ export const getProfile = (accountName) => {
     }
   });
 };
+
+
+export const patchProfile = (accountName, usernameChange, descriptionChange) => {
+  const accessToken = JSON.parse(localStorage.getItem('user')).accessToken;
+  return axios.patch(API_URL + "account",
+    {
+      username: usernameChange,
+      description: descriptionChange
+    },
+    {
+      headers: {
+        authorization: "Bearer " + accessToken
+      },
+      params: {
+        accountName: accountName
+      },
+    }
+  );
+};

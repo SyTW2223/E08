@@ -47,3 +47,39 @@ patchRouter.patch('/like', jwt.authenticateToken, async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+/**
+ * Patches the editable information of an account
+ */
+patchRouter.patch('/account', jwt.authenticateToken, (req, res) => {
+  if (!req.query.accountName) {
+    res.status(400).send({
+      error: 'An account name must be provided',
+    });
+  } else {
+    const allowedUpdates = ['username', 'description'];
+    const actualUpdates = Object.keys(req.body);
+    const isValidUpdate =
+      actualUpdates.every((update) => allowedUpdates.includes(update));
+
+    if (!isValidUpdate) {
+      res.status(400).send({
+        error: 'Update is not permitted',
+      });
+    } else {
+      Account.findOneAndUpdate({accountName: req.query.accountName.toString()}, req.body, {
+        new: true,
+        runValidators: true,
+      }).then((account) => {
+        if (!account) {
+          res.status(404).send();
+        } else {
+          res.send(account);
+        }
+      }).catch((error) => {
+        res.status(400).send(error);
+      });
+    }
+  }
+});

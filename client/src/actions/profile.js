@@ -18,7 +18,32 @@ export const profile = (accountName) => (dispatch) => {
         error.response.data.error || error.message;
 
       dispatch({
-        type: PROFILE_FAIL, 
+        type: PROFILE_FAIL,
+        payload: message
+      });
+
+      return Promise.reject();
+    }
+  )
+}
+
+// Creador de acciones para editar un perfil
+export const editProfile = (accountName, editUsername, editDescription) => (dispatch) => {
+  return ProfileService.patchProfile(accountName, editUsername, editDescription).then(
+    (response) => {
+      dispatch({
+        type: PROFILE_SUCCESS,
+        payload: response.data
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        error.response.data.error || error.message;
+
+      dispatch({
+        type: PROFILE_FAIL,
         payload: message
       });
 

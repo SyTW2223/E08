@@ -1,10 +1,10 @@
 import {
   PROFILE_SUCCESS,
-  PROFILE_FAIL,
 } from "../actions/types";
 
 
-const initialState = { description: "", posted: [], likedPosts: [] };
+const user = JSON.parse(localStorage.getItem("user"));
+const initialState = { username: user.username, description: "", posted: [], likedPosts: [] };
 
 export default function profileReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -13,6 +13,7 @@ export default function profileReducer(state = initialState, action) {
     case PROFILE_SUCCESS:
       return {
         ...state,
+        username: payload.username,
         description: payload.description,
         posted: payload.posts,
         likedPosts: payload.likedPosts,

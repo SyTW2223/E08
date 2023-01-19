@@ -19,7 +19,7 @@ import { clearMessage } from "../actions/message";
 export default function ButtonAppBar() {
 
   const { isLoggedIn } = useSelector(state => state.auth);
-  const { user: currentUser } = useSelector(state => state.auth);
+  const { username: currentUsername } = useSelector(state => state.profile);
 
   const dispatch = useDispatch();
 
@@ -70,8 +70,8 @@ export default function ButtonAppBar() {
 
           {isLoggedIn
             ? <Grid container justifyContent="flex-end">
-              <Typography variant="h6" component="div" sx={{ mt: 0.5, flexGrow: 1 }}>
-                Welcome, {currentUser.username}!
+              <Typography variant="h6" component="div" sx={{ mt: 0.4, flexGrow: 1 }}>
+                Welcome, {currentUsername}!
               </Typography>
               <IconButton
                 aria-label="profile icon of user"

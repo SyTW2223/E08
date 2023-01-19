@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
 import { profile } from '../actions/profile';
+import { editProfile } from '../actions/profile';
 
 import { IdPostsList } from './posts/IdPostsList';
 
@@ -11,6 +12,10 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import IconButton from '@mui/material/IconButton';
+import CheckIcon from '@mui/icons-material/Check';
+import CreateSharpIcon from '@mui/icons-material/CreateSharp';
+import TextField from '@mui/material/TextField';
 
 import userProfile from '../assets/images/user_profile_icon.png';
 
@@ -36,16 +41,17 @@ function TabPanel(props) {
 
 
 export const Profile = () => {
-  // const [username, setUsername] = useState("");
-  // const [account, setAccount] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [description, setDescription] = useState("");
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputDescription, setInputDescription] = useState("");
+  const [editUsername, setEditUsername] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
 
   const [value, setValue] = useState(0);
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const { username } = useSelector((state) => state.profile);
   const { description } = useSelector((state) => state.profile);
   const { posted } = useSelector((state) => state.profile);
   const { likedPosts } = useSelector((state) => state.profile);
@@ -56,10 +62,8 @@ export const Profile = () => {
     React.useEffect(() => {
       dispatch(profile(currentUser.accountName))
         .then(() => {
-          // setUsername(currentUser.username);
-          // setAccount(currentUser.accountName);
-          // setEmail(currentUser.email);
-          // setDescription(profileInfo.description);
+          setInputUsername(username);
+          setInputDescription(description);
           setProfileLoaded(true);
         }).catch(() => {
           setProfileLoaded(false);
@@ -76,6 +80,28 @@ export const Profile = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleEdit = (field) => {
+    if (field === 'username') {
+      setEditUsername(true)
+    } else if (field === 'description') {
+      setEditDescription(true)
+    }
+  }
+
+  const handleConfirm = (field) => {
+    if (field === 'username') {
+      setEditUsername(false)
+    } else if (field === 'description') {
+      setEditDescription(false)
+    }
+    dispatch(editProfile(currentUser.accountName, inputUsername, inputDescription))
+      .then(() => {
+        setProfileLoaded(true);
+      }).catch(() => {
+        setProfileLoaded(false);
+      });
+  }
 
   const profileStyle = {
     maxWidth: '290px',
@@ -101,44 +127,100 @@ export const Profile = () => {
           <Grid container xs={12} md={4} justifyContent="center">
             <img src={userProfile} alt="profile" style={profileStyle}></img>
           </Grid>
-          <Grid container xs={12} md={6}>
-            <Grid item xs={4} md={4}>
-              <Typography sx={{ fontWeight: 'bold' }} variant="h6" padding={3}>
+          <Grid container xs={12} md={8} alignItems="center">
+            <Grid item xs={5} md={4}>
+              <Typography variant="h6" padding={3}>
                 Username:
               </Typography>
             </Grid>
-            <Grid item xs={8} md={8}>
-              <Typography variant="h6" padding={3}>
-                {currentUser.username}
-              </Typography>
+            {editUsername
+              ? <>
+                <Grid item xs={6} md={7}>
+                  <TextField
+                    required
+                    value={inputUsername}
+                    fullWidth
+                    id="username-textfield"
+                    label={username}
+                    variant="outlined"
+                    onChange={(e) => setInputUsername(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={1} md={1}>
+                  <IconButton aria-label="confirm username" onClick={() => handleConfirm('username')}>
+                    <CheckIcon />
+                  </IconButton>
+                </Grid>
+              </>
+              : <>
+                <Grid item xs={6} md={7}>
+                  <Typography variant="h6" padding={3}>
+                    {username}
+                  </Typography>
+                </Grid>
+                <Grid item xs={1} md={1}>
+                  <IconButton aria-label="edit username" onClick={() => handleEdit('username')}>
+                    <CreateSharpIcon />
+                  </IconButton>
+                </Grid>
+              </>
+            }
+            <Grid container>
+              <Grid item xs={5} md={4}>
+                <Typography variant="h6" padding={3}>
+                  Account:
+                </Typography>
+              </Grid>
+              <Grid item xs={7} md={8}>
+                <Typography variant="h6" padding={3}>
+                  {currentUser.accountName}
+                </Typography>
+              </Grid>
             </Grid>
             <Grid item xs={4} md={4}>
-              <Typography sx={{ fontWeight: 'bold' }} variant="h6" padding={3}>
-                Account:
-              </Typography>
-            </Grid>
-            <Grid item xs={8} md={8}>
               <Typography variant="h6" padding={3}>
-                {currentUser.accountName}
-              </Typography>
-            </Grid>
-            <Grid item xs={4} md={4}>
-              <Typography sx={{ fontWeight: 'bold' }} variant="h6" padding={3}>
                 About me:
               </Typography>
             </Grid>
-            <Grid item xs={8} md={8}>
-              {description
-                ? <Typography variant="h6" padding={3}>
-                  {description}
-                </Typography>
-                : <Typography variant="body1" padding={3.5}>
-                  No description has been provided.
-                </Typography>
-              }
-            </Grid>
+            {editDescription
+              ? <>
+                <Grid item xs={7} md={7}>
+                  <TextField
+                    required
+                    value={inputDescription}
+                    fullWidth
+                    id="description-textfield"
+                    label="About me"
+                    variant="outlined"
+                    onChange={(e) => setInputDescription(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={1} md={1}>
+                  <IconButton aria-label="confirm description" onClick={() => handleConfirm('description')}>
+                    <CheckIcon />
+                  </IconButton>
+                </Grid>
+              </>
+              : <>
+                <Grid item xs={7} md={7}>
+                  {description
+                    ? <Typography variant="h6" padding={3}>
+                      {description}
+                    </Typography>
+                    : <Typography variant="body1" padding={3.5}>
+                      No description has been provided.
+                    </Typography>
+                  }
+                </Grid>
+                <Grid item xs={1} md={1}>
+                  <IconButton aria-label="edit description" onClick={() => handleEdit('description')}>
+                    <CreateSharpIcon />
+                  </IconButton>
+                </Grid>
+              </>
+            }
             <Grid item xs={4} md={4}>
-              <Typography sx={{ fontWeight: 'bold' }} variant="h6" padding={3}>
+              <Typography variant="h6" padding={3}>
                 Email:
               </Typography>
             </Grid>
