@@ -204,7 +204,7 @@ export const Profile = () => {
               : <>
                 <Grid item xs={7} md={7}>
                   {description
-                    ? <Typography variant="h6" padding={3}>
+                    ? <Typography variant="body1" padding={3}>
                       {description}
                     </Typography>
                     : <Typography variant="body1" padding={3.5}>
@@ -219,12 +219,12 @@ export const Profile = () => {
                 </Grid>
               </>
             }
-            <Grid item xs={4} md={4}>
+            <Grid item xs={5} md={4}>
               <Typography variant="h6" padding={3}>
                 Email:
               </Typography>
             </Grid>
-            <Grid item xs={8} md={8}>
+            <Grid item xs={7} md={8}>
               <Typography variant="h6" padding={3}>
                 {currentUser.email}
               </Typography>
