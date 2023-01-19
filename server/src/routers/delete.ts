@@ -63,34 +63,40 @@ deleteRouter.delete('/account/:id', jwt.authenticateToken, (req, res) => {
 /**
  * delete a post by its id  
  * */
-deleteRouter.delete('/post', jwt.authenticateToken, (req, res) => {
-    if(!req.body.postID || !req.body.accountName){
-        res.status(400).send({
-            error: 'A post ID must be provided', 
-        });
-        return;
-    } else {
-        const filter = { _id: req.body.postID };
-        Post.findOne(filter).then((post) => {
+deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
+    try {
+        if(!req.body.postID || !req.body.accountName){
+            return res.status(400).json({
+                error: 'A post ID must be provided and an account name', 
+            });
+        }
+        const post = await Post.findById(req.body.postID);
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+        if(post.accountName !== req.body.accountName) {
+            return res.status(400).json({ error: 'Account name does not match post' });
+        }
+        const account = await Account.findOne({ account: post.accountName });
+        if (!account) {
+            return res.status(404).json({ error: 'Account not found' });
+        }
+        await Post.findByIdAndDelete(post._id).then((post) => {
             if (!post) {
-                res.status(404).send();
+                return res.status(404).json({ error: 'Post not found' });
             } else {
-                if(post.accountName === req.body.accountName){
-                    Post.findByIdAndDelete(post._id).then((post) => {
-                        if (!post) {
-                            res.status(404).send();
-                        } else {
-                            res.send(post);
-                        }
-                    }).catch(() => {
-                        res.status(400).send();
-                    });
-                } else {
-                    res.status(400).send();
-                }
+                account.posts = account.posts.filter( postID => {
+                    return postID.toString() !== post._id.toString();
+                })
+                account.save();
+                return res.json(post);
             }
+
         }).catch(() => {
-            res.status(400).send();
-        });
+            return res.status(400).json({ error: 'Bad request' });
+        }); 
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
