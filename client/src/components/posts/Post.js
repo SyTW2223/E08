@@ -100,7 +100,7 @@ export const Post = ({ id, title, accountName, content, index, tags }) => {
             <Typography variant="subtitle1" fontSize="1em">
               {currentPosts[index].likesFromAccounts.length}
             </Typography>
-            {currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
+            {currentUser && currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
               ? <IconButton
                 aria-label="like"
                 onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>

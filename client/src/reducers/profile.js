@@ -4,7 +4,9 @@ import {
 
 
 const user = JSON.parse(localStorage.getItem("user"));
-const initialState = { username: user.username, description: "", posted: [], likedPosts: [] };
+const initialState = user 
+    ? { username: user.username, description: "", posted: [], likedPosts: [] }
+    : { username: "", description: "", posted: [], likedPosts: [] };
 
 export default function profileReducer(state = initialState, action) {
   const { type, payload } = action;
