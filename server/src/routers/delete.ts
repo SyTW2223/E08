@@ -67,7 +67,7 @@ deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
     try {
         if(!req.body.postID || !req.body.accountName){
             return res.status(400).json({
-                error: 'A post ID must be provided and an account name', 
+                error: 'A post ID and an account name must be provided', 
             });
         }
         const post = await Post.findById(req.body.postID);
@@ -77,24 +77,20 @@ deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
         if(post.accountName !== req.body.accountName) {
             return res.status(400).json({ error: 'Account name does not match post' });
         }
-        const account = await Account.findOne({ account: post.accountName });
+        const account = await Account.findOne({ accountName: post.accountName });
         if (!account) {
             return res.status(404).json({ error: 'Account not found' });
         }
-        await Post.findByIdAndDelete(post._id).then((post) => {
-            if (!post) {
-                return res.status(404).json({ error: 'Post not found' });
-            } else {
-                account.posts = account.posts.filter( postID => {
-                    return postID.toString() !== post._id.toString();
-                })
-                account.save();
-                return res.json(post);
-            }
-
-        }).catch(() => {
-            return res.status(400).json({ error: 'Bad request' });
-        }); 
+        const deletedPost = await Post.findByIdAndDelete(req.body.postID);
+        if (!deletedPost) {
+            return res.status(404).json({ error: 'Post not found' });
+        } else {
+            account.posts = account.posts.filter( postID => {
+                return postID.toString() !== deletedPost._id.toString();
+            });
+            await account.save();
+            return res.json(deletedPost);
+        }
     } catch (err) {
         console.log(err);
         return res.status(500).json({ error: 'Internal Server Error' });
