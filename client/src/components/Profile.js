@@ -154,9 +154,10 @@ export const Profile = () => {
         marginTop={5}
         padding={3}
         borderRadius={5}
+        marginY="2em"
         sx={{ backgroundColor: 'primary.main' }}
       >
-        <Grid container alignItems="center" justifyContent="center" marginTop='1em'>
+        <Grid container alignItems="center" justifyContent="center" >
           <Grid container xs={12} md={4} justifyContent="center">
             <Grid item>
               <Avatar alt="profile" src={uploadImage || profilePicture || userAvatar} sx={profileStyle} />
