@@ -10,7 +10,7 @@ import MessageIcon from '@mui/icons-material/Message';
 
 import { PostsList } from "./posts/PostsList";
 import { Posts } from '../actions/post';
-import { getPagedPost, clearPost } from '../actions/post';
+import { getPagedPost } from '../actions/post';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 
@@ -31,22 +31,18 @@ export const Main = () => {
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
-  const currentProfile = useSelector(state => state.profile);
-  const { posts: currentPosts} = useSelector(state => state.post);
+  const { posts: currentPosts } = useSelector(state => state.post);
   const dispatch = useDispatch();
   const nextPage = useSelector(state => state.post.next);
   const totalPages = useSelector(state => state.post.totalPages);
 
   React.useEffect(() => {
-    dispatch(clearPost()).then(() => {
-      dispatch(getPagedPost(1))
-    });
+    dispatch(getPagedPost(1));
   }, [dispatch]);
 
   const handlePost = (e) => {
     const nameAccount = currentUser.accountName;
-    const profilePicture = currentProfile.profilePicture;
-    dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
+    dispatch(Posts(nameAccount, title, content, tag)).then(() => {
       setPostCreate(true);
     }).catch(() => {
       setPostCreate(false);
@@ -161,15 +157,15 @@ export const Main = () => {
                 </Stack>
               </form>
             ) : (
-              <Box 
-                display="flex" 
-                flexDirection="row" 
-                alignItems="center" 
-                justifyContent="center" 
-                padding={2} 
-                bgcolor = 'primary.light' 
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                padding={2}
+                bgcolor='primary.light'
                 sx={{ borderRadius: 3 }}
-                >
+              >
                 <Typography variant="h5">
                   Please login to post
                 </Typography>
@@ -187,15 +183,25 @@ export const Main = () => {
             <InfiniteScroll
               dataLength={currentPosts.length || 0}
               hasMore={HasMore}
-              next = {() => {
+              next={() => {
                 dispatch(getPagedPost(nextPage));
-              } }
+              }}
               loader={
-                <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
-                  <h4>Loading...</h4>
-                </Box>
+                nextPage <= totalPages ? (
+                  <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
+                    <Typography variant="body1">
+                      Loading...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
+                    <Typography variant="body1">
+                      Oh no! Seems like we run out of posts... 😦
+                    </Typography>
+                  </Box>
+                )
               }
-              >
+            >
               <PostsList posts={currentPosts} />
             </InfiniteScroll>
           </Stack>
