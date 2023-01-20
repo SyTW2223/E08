@@ -186,7 +186,7 @@ export const Profile = () => {
                   />
                 </IconButton>
               </Grid>
-              {editPicture
+              {editPicture && uploadImage
                 ? <Grid item>
                   <IconButton aria-label="confirm profile picture" onClick={() => handleConfirm('picture')}>
                     <CheckIcon />
