@@ -20,6 +20,7 @@ export default function ButtonAppBar() {
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
+  const currentProfile = useSelector(state => state.profile);
 
   const dispatch = useDispatch();
 

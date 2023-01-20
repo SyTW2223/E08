@@ -159,10 +159,10 @@ export const Profile = () => {
       >
         <Grid container alignItems="center" justifyContent="center" >
           <Grid container xs={12} md={4} justifyContent="center">
-            <Grid item>
+            <Grid item padding={1.5}>
               <Avatar alt="profile" src={uploadImage || profilePicture || userAvatar} sx={profileStyle} />
             </Grid>
-            <Grid container xs={12} md={12} alignItems='center' justifyContent='center' marginTop='0.5em'>
+            <Grid container xs={12} md={12} alignItems='center' justifyContent='center'>
               <Grid item>
                 <IconButton
                   aria-label="upload picture" component="label">
@@ -193,7 +193,7 @@ export const Profile = () => {
           </Grid>
           <Grid container xs={12} md={8} alignItems="center">
             <Grid item xs={5} md={4}>
-              <Typography variant="h6" padding={3}>
+              <Typography variant="h6" padding={1.5}>
                 Username:
               </Typography>
             </Grid>
@@ -218,7 +218,7 @@ export const Profile = () => {
               </>
               : <>
                 <Grid item xs={6} md={7}>
-                  <Typography variant="h6" padding={3}>
+                  <Typography variant="h6" padding={1.5}>
                     {username}
                   </Typography>
                 </Grid>
@@ -231,18 +231,18 @@ export const Profile = () => {
             }
             <Grid container>
               <Grid item xs={5} md={4}>
-                <Typography variant="h6" padding={3}>
+                <Typography variant="h6" padding={1.5}>
                   Account:
                 </Typography>
               </Grid>
               <Grid item xs={7} md={8}>
-                <Typography variant="h6" padding={3}>
+                <Typography variant="h6" padding={1.5}>
                   {currentUser.accountName}
                 </Typography>
               </Grid>
             </Grid>
             <Grid item xs={4} md={4}>
-              <Typography variant="h6" padding={3}>
+              <Typography variant="h6" padding={1.5}>
                 About me:
               </Typography>
             </Grid>
@@ -267,7 +267,7 @@ export const Profile = () => {
               </>
               : <>
                 <Grid item xs={7} md={7}>
-                  <Typography variant="body1" padding={3}>
+                  <Typography variant="body1" padding={1.5}>
                     {description || 'No description has been provided.'}
                   </Typography>
                 </Grid>
@@ -279,12 +279,12 @@ export const Profile = () => {
               </>
             }
             <Grid item xs={5} md={4}>
-              <Typography variant="h6" padding={3}>
+              <Typography variant="h6" padding={1.5}>
                 Email:
               </Typography>
             </Grid>
             <Grid item xs={7} md={8}>
-              <Typography variant="h6" padding={3}>
+              <Typography variant="h6" padding={1.5}>
                 {currentUser.email}
               </Typography>
             </Grid>
