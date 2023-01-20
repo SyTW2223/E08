@@ -70,7 +70,7 @@ getRouter.get('/postsByPage', (req, res) => {
   Post.countDocuments()
     .then((count) => {
       Post.find({})
-        .sort({ _id: -1 })
+        .sort({ date: -1 })
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((posts) => {

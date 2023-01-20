@@ -9,6 +9,7 @@ const setPost = (accountName, profilePicture, title, content, tags) => {
   return axios.post(API_URL + "post", {
     "accountName": accountName,
     "profilePicture": profilePicture,
+    "date": Date.now(),
     "title": title,
     "content": content,
     "tags": tags

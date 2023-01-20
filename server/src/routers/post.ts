@@ -114,6 +114,7 @@ postRouter.post('/post', jwt.authenticateToken, (req, res) => {
           content: req.body.content,
           accountName: req.body.accountName,
           profilePicture: req.body.profilePicture,
+          date: req.body.date,
           tags: req.body.tags
         });
 

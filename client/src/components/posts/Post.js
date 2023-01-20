@@ -44,7 +44,7 @@ function stringAvatar(name) {
 }
 
 
-export const Post = ({ id, title, accountName, profilePicture, content, index, tags }) => {
+export const Post = ({ id, title, accountName, profilePicture, content, index, tags, date }) => {
   const dispatch = useDispatch();
   const currentPosts = useSelector(state => state.post.posts);
   const { isLoggedIn } = useSelector(state => state.auth);
@@ -90,7 +90,7 @@ export const Post = ({ id, title, accountName, profilePicture, content, index, t
           </Typography>
         </Grid>
       </Grid>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container alignItems="center">
         <Grid item md={11} xs={9}>
           <Box display="flex" alignItems="center" justifyContent="left" marginLeft="2em" marginRight="2em">
             <Typography variant="body2">
@@ -103,20 +103,25 @@ export const Post = ({ id, title, accountName, profilePicture, content, index, t
             <Typography variant="subtitle1" fontSize="1em">
               {currentPosts[index].likesFromAccounts.length}
             </Typography>
-            {isLoggedIn
+            {currentUser && currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
               ? <IconButton
                 aria-label="like"
-                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}
-              >
-                {currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
-                  ? <FavoriteIcon size="1em" />
-                  : <FavoriteBorderIcon size="1em" />
-                }
+                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
+                <FavoriteIcon size="1em" />
               </IconButton>
-              : <Grid item marginLeft='0.3em' marginTop='0.3em'>
-                  <FavoriteBorderIcon size="2em" />
-                </Grid>
+              : <IconButton
+                aria-label="like"
+                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
+                <FavoriteBorderIcon size="1em" />
+              </IconButton>
             }
+          </Box>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <Box display="flex" alignItems="center" justifyContent="left" marginLeft="2em" marginRight="2em">
+            <Typography variant="body2">
+              {date.slice(11, 16)} | {date.slice(0, 10)} 
+            </Typography>
           </Box>
         </Grid>
       </Grid>
