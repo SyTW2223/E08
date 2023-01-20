@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import {
   Stack, Box, Container, Typography, Paper,
   TextField, FormControl, Grid, Button,
@@ -10,7 +11,9 @@ import MessageIcon from '@mui/icons-material/Message';
 
 import { PostsList } from "./posts/PostsList";
 import { Posts } from '../actions/post';
-import { getPagedPost, clearPost} from '../actions/post';
+import { getPagedPost, clearPost } from '../actions/post';
+import { logout } from "../actions/auth";
+import { getTokenExpiration } from "../helpers";
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 
@@ -32,23 +35,38 @@ export const Main = () => {
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
   const currentProfile = useSelector(state => state.profile);
-  const { posts: currentPosts} = useSelector(state => state.post);
-  const dispatch = useDispatch();
+  const { posts: currentPosts } = useSelector(state => state.post);
   const nextPage = useSelector(state => state.post.next);
   const totalPages = useSelector(state => state.post.totalPages);
 
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+
   React.useEffect(() => {
     dispatch(clearPost()).then(() => {
-      dispatch(getPagedPost(1))
+      dispatch(getPagedPost(1));
     });
   }, [dispatch]);
 
+  const handleLogout = React.useCallback(() => {
+    dispatch(logout());
+    navigate('/login');
+  }, [dispatch, navigate]);
+
   const handlePost = (e) => {
+    e.preventDefault();
     const nameAccount = currentUser.accountName;
     const profilePicture = currentProfile.profilePicture;
     dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
       setPostCreate(true);
+      dispatch(clearPost()).then(() => {
+        dispatch(getPagedPost(1));
+      });
     }).catch(() => {
+      const tokenExpiration = getTokenExpiration(currentUser.accessToken);
+      if (tokenExpiration < new Date()) {
+        handleLogout();
+      }
       setPostCreate(false);
     });
   }

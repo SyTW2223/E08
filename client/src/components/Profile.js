@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { profile } from '../actions/profile';
 import { editProfile } from '../actions/profile';
@@ -19,6 +19,9 @@ import CreateSharpIcon from '@mui/icons-material/CreateSharp';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
+
+import { logout } from "../actions/auth";
+import { getTokenExpiration } from "../helpers";
 
 import userAvatar from '../assets/images/user_profile_icon.png';
 
@@ -64,6 +67,13 @@ export const Profile = () => {
   const { likedPosts } = useSelector((state) => state.profile);
 
   const dispatch = useDispatch();
+  let navigate = useNavigate();
+
+  const handleLogout = React.useCallback(() => {
+    setProfileLoaded(false);
+    dispatch(logout());
+    navigate("/login");
+  }, [dispatch, navigate]);
 
   const LoadProfile = (() => {
     React.useEffect(() => {
@@ -71,6 +81,10 @@ export const Profile = () => {
         .then(() => {
           setProfileLoaded(true);
         }).catch(() => {
+          const tokenExpiration = getTokenExpiration(currentUser.accessToken);
+          if (tokenExpiration < new Date()) {
+            handleLogout();
+          }
           setProfileLoaded(false);
         });
     }, []);
@@ -129,8 +143,11 @@ export const Profile = () => {
         setEditUsername("");
         setProfileLoaded(true);
       }).catch(() => {
+        const tokenExpiration = getTokenExpiration(currentUser.accessToken);
+        if (tokenExpiration < new Date()) {
+          handleLogout();
+        }
         setProfileLoaded(false);
-        setErrorUpload(true);
       });
   }
 
@@ -201,8 +218,7 @@ export const Profile = () => {
                 : null
               }
               {errorUpload
-                ?
-                <Grid item>
+                ? <Grid item>
                   <Alert severity="error" variant="filled">
                     Size must be less than 50KB!
                   </Alert>

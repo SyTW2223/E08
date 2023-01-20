@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,10 +17,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/auth';
 import { profile } from '../actions/profile';
 import { clearMessage } from "../actions/message";
+import { getTokenExpiration } from "../helpers";
 
 import userAvatar from '../assets/images/user_profile_icon.png';
 
 export default function ButtonAppBar() {
+  let navigate = useNavigate();
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
@@ -29,6 +32,12 @@ export default function ButtonAppBar() {
 
   const dispatch = useDispatch();
   let location = useLocation();
+
+  const handleLogout = React.useCallback(() => {
+    setProfileLoaded(false);
+    dispatch(logout());
+    navigate('/login');
+  }, [dispatch, navigate]);
 
   React.useEffect(() => {
     if (["/login", "/register"].includes(location.pathname)) {
@@ -40,15 +49,14 @@ export default function ButtonAppBar() {
         .then(() => {
           setProfileLoaded(true);
         }).catch(() => {
+          const tokenExpiration = getTokenExpiration(currentUser.accessToken);
+          if (tokenExpiration < new Date()) {
+            handleLogout();
+          }
           setProfileLoaded(false);
         });
     }
-  }, [dispatch, location, isLoggedIn, currentUser]);
-
-  const handleLogout = React.useCallback(() => {
-    setProfileLoaded(false);
-    dispatch(logout());
-  }, [dispatch]);
+  }, [dispatch, location, isLoggedIn, currentUser, handleLogout]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -70,7 +78,7 @@ export default function ButtonAppBar() {
             UTOPIA
           </Typography>
 
-          {!["/", "/main"].includes(location.pathname)
+          {!["/", "/home"].includes(location.pathname)
             ? <IconButton
               aria-label="back to main"
               component={Link} to="/"
