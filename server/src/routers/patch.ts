@@ -58,7 +58,7 @@ patchRouter.patch('/account', jwt.authenticateToken, (req, res) => {
       error: 'An account name must be provided',
     });
   } else {
-    const allowedUpdates = ['username', 'description'];
+    const allowedUpdates = ['username', 'description', 'profilePicture'];
     const actualUpdates = Object.keys(req.body);
     const isValidUpdate =
       actualUpdates.every((update) => allowedUpdates.includes(update));
@@ -75,8 +75,14 @@ patchRouter.patch('/account', jwt.authenticateToken, (req, res) => {
         if (!account) {
           res.status(404).send();
         } else {
+          // if (req.body.profilePicture.toString()) {
+          //   Post.updateMany(
+          //     { _id: { $in: account.posts } },
+          //     { $set: { profilePicture: account.profilePicture } },
+          //   )
+          // }
           res.send(account);
-        }
+        };
       }).catch((error) => {
         res.status(400).send(error);
       });

@@ -28,8 +28,8 @@ export const profile = (accountName) => (dispatch) => {
 }
 
 // Creador de acciones para editar un perfil
-export const editProfile = (accountName, editUsername, editDescription) => (dispatch) => {
-  return ProfileService.patchProfile(accountName, editUsername, editDescription).then(
+export const editProfile = (accountName, profileChanges) => (dispatch) => {
+  return ProfileService.patchProfile(accountName, profileChanges).then(
     (response) => {
       dispatch({
         type: PROFILE_SUCCESS,

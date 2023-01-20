@@ -13,8 +13,8 @@ import {
 import PostService from "../services/post.service";
 
 // Creador de acciones para settear un post 
-export const Posts = (accountName, title, content, tags) => (dispatch) => {
-  return PostService.setPost(accountName, title, content, tags).then(
+export const Posts = (accountName, profilePicture, title, content, tags) => (dispatch) => {
+  return PostService.setPost(accountName, profilePicture, title, content, tags).then(
     (response) => {
       dispatch({
         type: POST_CREATE,

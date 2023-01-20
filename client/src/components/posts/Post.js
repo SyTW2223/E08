@@ -44,7 +44,7 @@ function stringAvatar(name) {
 }
 
 
-export const Post = ({ id, title, accountName, content, index, tags }) => {
+export const Post = ({ id, title, accountName, profilePicture, content, index, tags }) => {
   const dispatch = useDispatch();
   const currentPosts = useSelector(state => state.post.posts);
   const { isLoggedIn } = useSelector(state => state.auth);
@@ -52,9 +52,12 @@ export const Post = ({ id, title, accountName, content, index, tags }) => {
 
   return (
     <Paper elevation={3} sx={{ padding: 3, margin: 2 }}>
-      <Grid container justifyContent="center">
+      <Grid container justifyContent="center" alignItems="center">
         <Grid container justifyContent="center" md={1} xs={3}>
-          <Avatar {...stringAvatar(accountName)} />
+          {profilePicture
+            ? <Avatar src={profilePicture} />
+            : <Avatar {...stringAvatar(accountName)} />
+          }
         </Grid>
         <Grid item md={10} xs={7} zeroMinWidth>
           <Typography style={{ 'overflowWrap': 'break-word' }} variant="h6">

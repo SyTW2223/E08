@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-
 import { profile } from '../actions/profile';
 import { editProfile } from '../actions/profile';
-
 import { IdPostsList } from './posts/IdPostsList';
+import { convertToBase64 } from '../helpers';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -14,10 +13,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Avatar from '@mui/material/Avatar';
 import CreateSharpIcon from '@mui/icons-material/CreateSharp';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import TextField from '@mui/material/TextField';
 
-import userProfile from '../assets/images/user_profile_icon.png';
+import userAvatar from '../assets/images/user_profile_icon.png';
 
 
 function TabPanel(props) {
@@ -43,6 +45,8 @@ function TabPanel(props) {
 export const Profile = () => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputDescription, setInputDescription] = useState("");
+  const [uploadImage, setUploadImage] = useState("");
+  const [editPicture, setEditPicture] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
   const [editDescription, setEditDescription] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -53,6 +57,7 @@ export const Profile = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const { username } = useSelector((state) => state.profile);
   const { description } = useSelector((state) => state.profile);
+  const { profilePicture } = useSelector((state) => state.profile);
   const { posted } = useSelector((state) => state.profile);
   const { likedPosts } = useSelector((state) => state.profile);
 
@@ -62,8 +67,6 @@ export const Profile = () => {
     React.useEffect(() => {
       dispatch(profile(currentUser.accountName))
         .then(() => {
-          setInputUsername(username);
-          setInputDescription(description);
           setProfileLoaded(true);
         }).catch(() => {
           setProfileLoaded(false);
@@ -89,23 +92,53 @@ export const Profile = () => {
     }
   }
 
-  const handleConfirm = (field) => {
-    if (field === 'username') {
-      setEditUsername(false)
-    } else if (field === 'description') {
-      setEditDescription(false)
+  const handleCancel = (field) => {
+    if (field === 'picture') {
+      setEditPicture(false);
+      setUploadImage("");
     }
-    dispatch(editProfile(currentUser.accountName, inputUsername, inputDescription))
+  }
+
+  const handleConfirm = (field) => {
+    let changes = {};
+    switch (field) {
+      case 'username':
+        changes = { username: inputUsername };
+        setEditUsername(false);
+        break;
+      case 'description':
+        changes = { description: inputDescription };
+        setEditDescription(false);
+        break;
+      case 'picture':
+        changes = { profilePicture: uploadImage };
+        setEditPicture(false);
+        break;
+      default:
+        console.log('Changes not valid');
+    }
+
+    dispatch(editProfile(currentUser.accountName, changes))
       .then(() => {
+        setUploadImage("");
+        setEditDescription("");
+        setEditUsername("");
         setProfileLoaded(true);
       }).catch(() => {
         setProfileLoaded(false);
       });
   }
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertToBase64(file);
+    setUploadImage(base64);
+    setEditPicture(true);
+  }
+
   const profileStyle = {
-    maxWidth: '290px',
-    height: 'auto',
+    width: '290px',
+    height: '290px',
   };
 
   return (
@@ -123,9 +156,39 @@ export const Profile = () => {
         borderRadius={5}
         sx={{ backgroundColor: 'primary.main' }}
       >
-        <Grid container alignItems="center" justifyContent="center">
+        <Grid container alignItems="center" justifyContent="center" marginTop='1em'>
           <Grid container xs={12} md={4} justifyContent="center">
-            <img src={userProfile} alt="profile" style={profileStyle}></img>
+            <Grid item>
+              <Avatar alt="profile" src={uploadImage || profilePicture || userAvatar} sx={profileStyle} />
+            </Grid>
+            <Grid container xs={12} md={12} alignItems='center' justifyContent='center' marginTop='0.5em'>
+              <Grid item>
+                <IconButton
+                  aria-label="upload picture" component="label">
+                  <UploadFileIcon />
+                  <input
+                    type="file"
+                    lable="Image"
+                    name="profilePicture"
+                    id='file-upload'
+                    accept='.jpeg, .png, .jpg'
+                    onChange={(e) => { handleFileUpload(e) }}
+                    hidden
+                  />
+                </IconButton>
+              </Grid>
+              {editPicture
+                ? <Grid item>
+                  <IconButton aria-label="confirm profile picture" onClick={() => handleConfirm('picture')}>
+                    <CheckIcon />
+                  </IconButton>
+                  <IconButton aria-label="cancel upload profile picture" onClick={() => handleCancel('picture')}>
+                    <CancelIcon />
+                  </IconButton>
+                </Grid>
+                : null
+              }
+            </Grid>
           </Grid>
           <Grid container xs={12} md={8} alignItems="center">
             <Grid item xs={5} md={4}>
@@ -203,14 +266,9 @@ export const Profile = () => {
               </>
               : <>
                 <Grid item xs={7} md={7}>
-                  {description
-                    ? <Typography variant="body1" padding={3}>
-                      {description}
-                    </Typography>
-                    : <Typography variant="body1" padding={3.5}>
-                      No description has been provided.
-                    </Typography>
-                  }
+                  <Typography variant="body1" padding={3}>
+                    {description || 'No description has been provided.'}
+                  </Typography>
                 </Grid>
                 <Grid item xs={1} md={1}>
                   <IconButton aria-label="edit description" onClick={() => handleEdit('description')}>

@@ -26,6 +26,7 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
           accountName: account.accountName,
           email: account.email,
           description: account.description,
+          profilePicture: account.profilePicture,
           posts: account.posts,
           likedPosts: account.likedPosts
         });
@@ -50,6 +51,7 @@ getRouter.get('/account/:id', jwt.authenticateToken, (req, res) => {
         accountName: account.accountName,
         email: account.email,
         description: account.description,
+        profilePicture: account.profilePicture,
         posts: account.posts,
         likedPosts: account.likedPosts
       });

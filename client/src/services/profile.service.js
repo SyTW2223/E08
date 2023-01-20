@@ -17,13 +17,9 @@ export const getProfile = (accountName) => {
 };
 
 
-export const patchProfile = (accountName, usernameChange, descriptionChange) => {
+export const patchProfile = (accountName, accountChanges) => {
   const accessToken = JSON.parse(localStorage.getItem('user')).accessToken;
-  return axios.patch(API_URL + "account",
-    {
-      username: usernameChange,
-      description: descriptionChange
-    },
+  return axios.patch(API_URL + "account", accountChanges,
     {
       headers: {
         authorization: "Bearer " + accessToken

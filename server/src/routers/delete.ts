@@ -65,7 +65,7 @@ deleteRouter.delete('/account/:id', jwt.authenticateToken, (req, res) => {
  * */
 deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
     try {
-        if(!req.body.postID || !req.body.accountName){
+        if (!req.body.postID || !req.body.accountName){
             return res.status(400).json({
                 error: 'A post ID and an account name must be provided', 
             });
@@ -74,7 +74,7 @@ deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
         }
-        if(post.accountName !== req.body.accountName) {
+        if (post.accountName !== req.body.accountName) {
             return res.status(400).json({ error: 'Account name does not match post' });
         }
         const account = await Account.findOne({ accountName: post.accountName });

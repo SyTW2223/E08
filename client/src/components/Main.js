@@ -31,6 +31,7 @@ export const Main = () => {
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
+  const currentProfile = useSelector(state => state.profile);
   const { posts: currentPosts} = useSelector(state => state.post);
   const dispatch = useDispatch();
   const nextPage = useSelector(state => state.post.next);
@@ -42,7 +43,8 @@ export const Main = () => {
 
   const handlePost = (e) => {
     const nameAccount = currentUser.accountName;
-    dispatch(Posts(nameAccount, title, content, tag)).then(() => {
+    const profilePicture = currentProfile.profilePicture;
+    dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
       setPostCreate(true);
     }).catch(() => {
       setPostCreate(false);

@@ -7,6 +7,7 @@ interface PostDocumentInterface extends Document {
   title: string,
   content: string,
   accountName: string,
+  profilePicture: string,
   likesFromAccounts: string[],
   tags: string[]
 }
@@ -24,6 +25,10 @@ const PostSchema = new Schema<PostDocumentInterface>({
     type: String,
     required: true,
     trim: true,
+  },
+  profilePicture: {
+    type: String,
+    default: "",
   },
   likesFromAccounts: [
     {
