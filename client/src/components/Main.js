@@ -10,7 +10,7 @@ import MessageIcon from '@mui/icons-material/Message';
 
 import { PostsList } from "./posts/PostsList";
 import { Posts } from '../actions/post';
-import { getPagedPost } from '../actions/post';
+import { getPagedPost, clearPost} from '../actions/post';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 
@@ -31,18 +31,22 @@ export const Main = () => {
 
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
-  const { posts: currentPosts } = useSelector(state => state.post);
+  const currentProfile = useSelector(state => state.profile);
+  const { posts: currentPosts} = useSelector(state => state.post);
   const dispatch = useDispatch();
   const nextPage = useSelector(state => state.post.next);
   const totalPages = useSelector(state => state.post.totalPages);
 
   React.useEffect(() => {
-    dispatch(getPagedPost(1));
+    dispatch(clearPost()).then(() => {
+      dispatch(getPagedPost(1))
+    });
   }, [dispatch]);
 
   const handlePost = (e) => {
     const nameAccount = currentUser.accountName;
-    dispatch(Posts(nameAccount, title, content, tag)).then(() => {
+    const profilePicture = currentProfile.profilePicture;
+    dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
       setPostCreate(true);
     }).catch(() => {
       setPostCreate(false);

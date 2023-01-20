@@ -98,6 +98,7 @@ export const Profile = () => {
     if (field === 'picture') {
       setEditPicture(false);
       setUploadImage("");
+      setErrorUpload(false);
     }
   }
 
@@ -118,7 +119,7 @@ export const Profile = () => {
         setErrorUpload(false);
         break;
       default:
-        console.log('Changes not valid');
+        console.log('Changes were not valid');
     }
 
     dispatch(editProfile(currentUser.accountName, changes))
@@ -129,6 +130,7 @@ export const Profile = () => {
         setProfileLoaded(true);
       }).catch(() => {
         setProfileLoaded(false);
+        setErrorUpload(true);
       });
   }
 
@@ -142,6 +144,7 @@ export const Profile = () => {
     setUploadImage(base64);
     setErrorUpload(false);
     setEditPicture(true);
+    e.target.value = null;
   }
 
   const profileStyle = {
@@ -198,9 +201,12 @@ export const Profile = () => {
                 : null
               }
               {errorUpload
-                ? <Alert severity="error" variant="filled">
-                  Size must be less than 50KB!
-                </Alert>
+                ?
+                <Grid item>
+                  <Alert severity="error" variant="filled">
+                    Size must be less than 50KB!
+                  </Alert>
+                </Grid>
                 : null
               }
             </Grid>
