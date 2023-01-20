@@ -9,6 +9,7 @@ import {
   POST_DELETE_FAIL,
   PAGINATED_POST_SUCCESS,
   PAGINATED_POST_FAIL,
+  CLEAR_POSTS
 } from "./types";
 import PostService from "../services/post.service";
 
@@ -136,6 +137,7 @@ export const likePost = (id, accountLike) => (dispatch) => {
   )
 }
 
+// Creador de acciones para para borrar un post
 export const deletePost = (id, accountDelete) => (dispatch) => {
   return PostService.deletePosts(id, accountDelete).then(
     (response) => {
@@ -158,5 +160,14 @@ export const deletePost = (id, accountDelete) => (dispatch) => {
       return Promise.reject();
     }
   )
+}
+
+// Creador de acciones para limpiar posts
+export const clearPost = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_POSTS,
+  });
+
+  return Promise.resolve();
 }
 

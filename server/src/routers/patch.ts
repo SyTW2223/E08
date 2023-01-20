@@ -52,40 +52,43 @@ patchRouter.patch('/like', jwt.authenticateToken, async (req, res) => {
 /**
  * Patches the editable information of an account
  */
-patchRouter.patch('/account', jwt.authenticateToken, (req, res) => {
+patchRouter.patch('/account', jwt.authenticateToken, async (req, res) => {
   if (!req.query.accountName) {
-    res.status(400).send({
+    return res.status(400).send({
       error: 'An account name must be provided',
     });
-  } else {
-    const allowedUpdates = ['username', 'description', 'profilePicture'];
-    const actualUpdates = Object.keys(req.body);
-    const isValidUpdate =
-      actualUpdates.every((update) => allowedUpdates.includes(update));
+  }
 
-    if (!isValidUpdate) {
-      res.status(400).send({
-        error: 'Update is not permitted',
-      });
-    } else {
-      Account.findOneAndUpdate({accountName: req.query.accountName.toString()}, req.body, {
-        new: true,
-        runValidators: true,
-      }).then((account) => {
-        if (!account) {
-          res.status(404).send();
-        } else {
-          // if (req.body.profilePicture.toString()) {
-          //   Post.updateMany(
-          //     { _id: { $in: account.posts } },
-          //     { $set: { profilePicture: account.profilePicture } },
-          //   )
-          // }
-          res.send(account);
-        };
-      }).catch((error) => {
-        res.status(400).send(error);
-      });
+  const allowedUpdates = ['username', 'description', 'profilePicture'];
+  const actualUpdates = Object.keys(req.body);
+  const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
+
+  if (!isValidUpdate) {
+    return res.status(400).send({
+      error: 'Update is not permitted',
+    });
+  }
+
+  try {
+    const account = await Account.findOneAndUpdate({ accountName: req.query.accountName.toString() }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!account) {
+      return res.status(404).send();
     }
+
+    if (req.body.profilePicture) {
+      await Post.updateMany(
+        { _id: { $in: account.posts } },
+        { $set: { profilePicture: account.profilePicture } },
+        { new: true }
+      );
+    }
+    
+    return res.send(account);
+  } catch (error) {
+    return res.status(400).send(error);
   }
 });

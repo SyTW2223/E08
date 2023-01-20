@@ -18,6 +18,7 @@ import Avatar from '@mui/material/Avatar';
 import CreateSharpIcon from '@mui/icons-material/CreateSharp';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
 
 import userAvatar from '../assets/images/user_profile_icon.png';
 
@@ -46,6 +47,7 @@ export const Profile = () => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputDescription, setInputDescription] = useState("");
   const [uploadImage, setUploadImage] = useState("");
+  const [errorUpload, setErrorUpload] = useState(false);
   const [editPicture, setEditPicture] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
   const [editDescription, setEditDescription] = useState(false);
@@ -113,6 +115,7 @@ export const Profile = () => {
       case 'picture':
         changes = { profilePicture: uploadImage };
         setEditPicture(false);
+        setErrorUpload(false);
         break;
       default:
         console.log('Changes not valid');
@@ -131,8 +134,13 @@ export const Profile = () => {
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+    if (file.size > 51200) { //50Kb en bytes
+      setErrorUpload(true);
+      return;
+    }
     const base64 = await convertToBase64(file);
     setUploadImage(base64);
+    setErrorUpload(false);
     setEditPicture(true);
   }
 
@@ -159,7 +167,7 @@ export const Profile = () => {
       >
         <Grid container alignItems="center" justifyContent="center" >
           <Grid container xs={12} md={4} justifyContent="center">
-            <Grid item padding={1.5}>
+            <Grid item padding={2}>
               <Avatar alt="profile" src={uploadImage || profilePicture || userAvatar} sx={profileStyle} />
             </Grid>
             <Grid container xs={12} md={12} alignItems='center' justifyContent='center'>
@@ -189,11 +197,17 @@ export const Profile = () => {
                 </Grid>
                 : null
               }
+              {errorUpload
+                ? <Alert severity="error" variant="filled">
+                  Size must be less than 50KB!
+                </Alert>
+                : null
+              }
             </Grid>
           </Grid>
           <Grid container xs={12} md={8} alignItems="center">
             <Grid item xs={5} md={4}>
-              <Typography variant="h6" padding={1.5}>
+              <Typography variant="h6" padding={2}>
                 Username:
               </Typography>
             </Grid>
@@ -207,7 +221,7 @@ export const Profile = () => {
                     id="username-textfield"
                     label={username}
                     variant="outlined"
-                    onChange={(e) => setInputUsername(e.target.value)}
+                    onChange={(e) => setInputUsername(e.target.value.substring(0, 25))}
                   />
                 </Grid>
                 <Grid item xs={1} md={1}>
@@ -218,7 +232,7 @@ export const Profile = () => {
               </>
               : <>
                 <Grid item xs={6} md={7}>
-                  <Typography variant="h6" padding={1.5}>
+                  <Typography variant="h6" padding={2}>
                     {username}
                   </Typography>
                 </Grid>
@@ -231,18 +245,18 @@ export const Profile = () => {
             }
             <Grid container>
               <Grid item xs={5} md={4}>
-                <Typography variant="h6" padding={1.5}>
+                <Typography variant="h6" padding={2}>
                   Account:
                 </Typography>
               </Grid>
               <Grid item xs={7} md={8}>
-                <Typography variant="h6" padding={1.5}>
+                <Typography variant="h6" padding={2}>
                   {currentUser.accountName}
                 </Typography>
               </Grid>
             </Grid>
             <Grid item xs={4} md={4}>
-              <Typography variant="h6" padding={1.5}>
+              <Typography variant="h6" padding={2}>
                 About me:
               </Typography>
             </Grid>
@@ -256,7 +270,7 @@ export const Profile = () => {
                     id="description-textfield"
                     label="About me"
                     variant="outlined"
-                    onChange={(e) => setInputDescription(e.target.value)}
+                    onChange={(e) => setInputDescription(e.target.value.substring(0, 350))}
                   />
                 </Grid>
                 <Grid item xs={1} md={1}>
@@ -267,7 +281,7 @@ export const Profile = () => {
               </>
               : <>
                 <Grid item xs={7} md={7}>
-                  <Typography variant="body1" padding={1.5}>
+                  <Typography variant="body1" padding={2}>
                     {description || 'No description has been provided.'}
                   </Typography>
                 </Grid>
@@ -279,12 +293,12 @@ export const Profile = () => {
               </>
             }
             <Grid item xs={5} md={4}>
-              <Typography variant="h6" padding={1.5}>
+              <Typography variant="h6" padding={2}>
                 Email:
               </Typography>
             </Grid>
             <Grid item xs={7} md={8}>
-              <Typography variant="h6" padding={1.5}>
+              <Typography variant="h6" padding={2}>
                 {currentUser.email}
               </Typography>
             </Grid>

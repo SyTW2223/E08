@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,15 +6,18 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Avatar from '@mui/material/Avatar';
 
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logout } from '../actions/auth';
+import { profile } from '../actions/profile';
 import { clearMessage } from "../actions/message";
+
+import userAvatar from '../assets/images/user_profile_icon.png';
 
 export default function ButtonAppBar() {
 
@@ -22,8 +25,9 @@ export default function ButtonAppBar() {
   const { user: currentUser } = useSelector(state => state.auth);
   const currentProfile = useSelector(state => state.profile);
 
-  const dispatch = useDispatch();
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
+  const dispatch = useDispatch();
   let location = useLocation();
 
   React.useEffect(() => {
@@ -31,9 +35,18 @@ export default function ButtonAppBar() {
       // Se limpia los mensajes del servidor después de renderizar
       dispatch(clearMessage());
     }
-  }, [dispatch, location]);
+    if (isLoggedIn) {
+      dispatch(profile(currentUser.accountName))
+        .then(() => {
+          setProfileLoaded(true);
+        }).catch(() => {
+          setProfileLoaded(false);
+        });
+    }
+  }, [dispatch, location, isLoggedIn, currentUser]);
 
   const handleLogout = React.useCallback(() => {
+    setProfileLoaded(false);
     dispatch(logout());
   }, [dispatch]);
 
@@ -62,45 +75,49 @@ export default function ButtonAppBar() {
               aria-label="back to main"
               component={Link} to="/"
               edge='start'
-              sx={{ display: { xs: 'flex', md: 'none', marginRight: '0.25em'} }}
+              sx={{ display: { xs: 'flex', md: 'none', marginRight: '0.25em' } }}
             >
               <ArrowBackIosNewIcon />
             </IconButton>
             : null
           }
 
-          {isLoggedIn
+          {isLoggedIn && profileLoaded
             ? <Grid container justifyContent="flex-end">
-              <Typography variant="h6" component="div" sx={{ mt: 0.4, flexGrow: 1 }}>
-                Welcome, {currentUser.username}!
+              <Typography variant="h6" component="div" sx={{ display: { xs: 'none', md: 'flex' }, mt: 0.4, flexGrow: 1 }}>
+                Welcome, {currentProfile.username}!
               </Typography>
-              <IconButton
-                aria-label="profile icon of user"
-                component={Link} to='/profile'
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <IconButton
-                aria-label="logout"
-                component={Link} to="/login"
-                color="error"
-                onClick={handleLogout}
-              >
-                <LogoutIcon />
-              </IconButton>
+              <Grid item paddingRight={1}>
+                <Avatar
+                  alt="link to profile"
+                  src={currentProfile.profilePicture || userAvatar}
+                  component={Link} to='/profile'
+                />
+              </Grid>
+              <Grid item>
+                <IconButton
+                  aria-label="logout"
+                  component={Link} to="/login"
+                  color="error"
+                  onClick={handleLogout}
+                >
+                  <LogoutIcon />
+                </IconButton>
+              </Grid>
             </Grid>
             : <Grid container justifyContent="flex-end">
-              <Button
-                component={Link} to='/login'
-                color="inherit"
-                sx={{
-                  color: 'inherit',
-                  backgroundColor: 'primary.light'
-                }}
-              >
-                Login
-              </Button>
+              <Grid item>
+                <Button
+                  component={Link} to='/login'
+                  color="inherit"
+                  sx={{
+                    color: 'inherit',
+                    backgroundColor: 'primary.light'
+                  }}
+                >
+                  Login
+                </Button>
+              </Grid>
             </Grid>
           }
         </Toolbar>

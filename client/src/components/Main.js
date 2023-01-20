@@ -10,7 +10,7 @@ import MessageIcon from '@mui/icons-material/Message';
 
 import { PostsList } from "./posts/PostsList";
 import { Posts } from '../actions/post';
-import { getPagedPost } from '../actions/post';
+import { getPagedPost, clearPost } from '../actions/post';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 
@@ -38,7 +38,9 @@ export const Main = () => {
   const totalPages = useSelector(state => state.post.totalPages);
 
   React.useEffect(() => {
-    dispatch(getPagedPost(1));
+    dispatch(clearPost()).then(() => {
+      dispatch(getPagedPost(1))
+    });
   }, [dispatch]);
 
   const handlePost = (e) => {
