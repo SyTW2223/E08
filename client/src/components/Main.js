@@ -59,6 +59,9 @@ export const Main = () => {
     const profilePicture = currentProfile.profilePicture;
     dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
       setPostCreate(true);
+      setTitle("");
+      setContent("");
+      setTag([]);
       dispatch(clearPost()).then(() => {
         dispatch(getPagedPost(1));
       });

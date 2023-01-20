@@ -103,17 +103,19 @@ export const Post = ({ id, title, accountName, profilePicture, content, index, t
             <Typography variant="subtitle1" fontSize="1em">
               {currentPosts[index].likesFromAccounts.length}
             </Typography>
-            {currentUser && currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
+            {isLoggedIn
               ? <IconButton
                 aria-label="like"
-                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
-                <FavoriteIcon size="1em" />
+                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}
+              >
+                {currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
+                  ? <FavoriteIcon size="1em" />
+                  : <FavoriteBorderIcon size="1em" />
+                }
               </IconButton>
-              : <IconButton
-                aria-label="like"
-                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
-                <FavoriteBorderIcon size="1em" />
-              </IconButton>
+              : <Grid item marginLeft='0.3em' marginTop='0.3em'>
+                  <FavoriteBorderIcon size="2em" />
+                </Grid>
             }
           </Box>
         </Grid>

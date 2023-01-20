@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, TextField, Button, Alert, FormControl } from "@mui/material";
 
 import { register } from '../actions/auth';
+import { login } from '../actions/auth';
 
 export const Register = () => {
   const [username, setUsername] = useState("");
@@ -17,20 +19,22 @@ export const Register = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const { message } = useSelector(state => state.message);
+  
   const dispatch = useDispatch();
+  let navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
 
     //Validate username
-    if (!username.match(/^[a-zA-Z0-9]{1,25}$/)) {
+    if (!username.match(/^[a-zA-Z0-9_]{1,25}$/)) {
       setUsernameError("The username must have a length less than or equal to 25 and can only contain alphanumeric characters.");
       return;
     } else {
       setUsernameError("");
     }
     //Validate accountName
-    if (!accountName.match(/^[a-zA-Z0-9]{1,20}$/)) {
+    if (!accountName.match(/^[a-zA-Z0-9_]{1,20}$/)) {
       setAccountNameError("The account name must have a length less than or equal to 20 and can only contain alphanumeric characters.");
       return;
     } else {
@@ -51,9 +55,18 @@ export const Register = () => {
     } else {
       setPasswordError("");
     }
+
     dispatch(register(username, accountName, email, password))
       .then(() => {
+        setUsername("");
+        setAccountName("");
+        setEmail("");
+        setPassword("");
         setUserCreated(true);
+        dispatch(login(accountName, password))
+          .then(() => {
+            navigate("/profile");
+          });
       }).catch(() => {
         setUserCreated(false);
       });
