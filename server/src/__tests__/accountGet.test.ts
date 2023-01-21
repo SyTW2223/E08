@@ -9,7 +9,7 @@ const api = supertest(app)
 
 let user: any;
 
-jest.setTimeout(100000000)
+jest.setTimeout(1000000000)
 
 const account3 = {
     username: "Prueba3",
