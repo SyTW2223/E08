@@ -9,12 +9,36 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        folder:
+          - 'client'
+          - 'server'
+
+    env:
+      COVERALLS_PARALLEL: true
+      MONGO_DB_URI_TEST: mongodb+srv://SyTW:sytw123@cluster0.vrub0al.mongodb.net/test-app?retryWrites=true&w=majority
+
+    defaults:
+      run:
+        working-directory: ./${{ matrix.folder }}
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Cloning repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    - name: Use Node.js 19.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 19.x
+        cache: 'npm'
+    - name: Installing dependencies
+      run: npm install
+    - name: Generating coverage information
+      run: npm run coverage  
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
