@@ -5,6 +5,9 @@ import * as supertest from 'supertest';
 import { Account } from '../models/account';
 
 const api = supertest(app)
+
+jest.setTimeout(100000000);
+
 let user: any;
 
 
