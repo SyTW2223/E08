@@ -55,9 +55,9 @@ postRouter.post('/signup', async (req, res) => {
  * Check if a user is registered
  */
 postRouter.post('/login', (req, res) => {
-  if (!req.body.accountName) {
+  if (!req.body.accountName || !req.body.password) {
     res.status(400).send({
-      error: 'An account name must be provided',
+      error: 'An account name and password must be provided',
     });
   } else {
     const filter = { accountName: req.body.accountName.toString() };

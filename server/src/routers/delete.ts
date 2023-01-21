@@ -20,7 +20,7 @@ deleteRouter.delete('/account', jwt.authenticateToken, (req, res) => {
         Account.findOneAndDelete(filter)
             .then((account) => {
                 if (!account) {
-                    res.status(404).send();
+                    res.status(404).send("Account not found");
                 } else {
                     res.send(account);
                 }

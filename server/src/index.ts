@@ -4,8 +4,8 @@ import app from './app';
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server up on port ${port}`);
 });
 
-export default app;
+export default server;
