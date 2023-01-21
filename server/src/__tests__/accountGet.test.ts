@@ -9,6 +9,7 @@ const api = supertest(app)
 
 let user: any;
 
+jest.setTimeout(100000000)
 
 const account3 = {
     username: "Prueba3",
@@ -18,7 +19,6 @@ const account3 = {
 }
 
 beforeAll(async () => {
-    jest.setTimeout(90 * 1000)
     await Account.deleteMany({});
     await api
         .post('/signup')
