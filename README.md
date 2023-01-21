@@ -5,3 +5,6 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SyTW2223_E08&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SyTW2223_E08)
 
 ## Participantes:
+* Tanausú Falcón Casanova | alu0101320878@ull.edu.es
+* Vlatko Jesús Marchán Sekulic | alu0101321141@ull.edu.es
+* Jacobo Labrador González | alu0101119663@ull.edu.es
