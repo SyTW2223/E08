@@ -48,6 +48,7 @@ function TabPanel(props) {
 
 export const Profile = () => {
   const [inputUsername, setInputUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [inputDescription, setInputDescription] = useState("");
   const [uploadImage, setUploadImage] = useState("");
   const [errorUpload, setErrorUpload] = useState(false);
@@ -120,6 +121,13 @@ export const Profile = () => {
     let changes = {};
     switch (field) {
       case 'username':
+        //Validate username
+        if (!inputUsername.match(/^[a-zA-Z0-9_\s]{1,25}$/)) {
+          setUsernameError("Length less than or equal to 25 with alphanumeric characters.");
+          return;
+        } else {
+          setUsernameError("");
+        }
         changes = { username: inputUsername };
         setEditUsername(false);
         break;
@@ -241,6 +249,8 @@ export const Profile = () => {
                     id="username-textfield"
                     label={username}
                     variant="outlined"
+                    error={usernameError !== ""}
+                    helperText={usernameError}
                     onChange={(e) => setInputUsername(e.target.value.substring(0, 25))}
                   />
                 </Grid>

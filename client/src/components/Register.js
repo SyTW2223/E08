@@ -27,7 +27,7 @@ export const Register = () => {
     e.preventDefault();
 
     //Validate username
-    if (!username.match(/^[a-zA-Z0-9_]{1,25}$/)) {
+    if (!username.match(/^[a-zA-Z0-9_\s]{1,25}$/)) {
       setUsernameError("The username must have a length less than or equal to 25 and can only contain alphanumeric characters.");
       return;
     } else {
