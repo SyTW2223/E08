@@ -9,24 +9,24 @@ let user: any;
 
 jest.setTimeout(30000);
 
-const account = {
-    username: "Prueba",
-    accountName: "prueba",
-    email: "prueba@gmail.com",
-    password: "prueba1prueba"
+const account3 = {
+    username: "Prueba3",
+    accountName: "prueba3",
+    email: "prueba3@gmail.com",
+    password: "prueba3prueba"
 }
 
 beforeAll(async () => {
     await Account.deleteMany({});
     await api
         .post('/signup')
-        .send(account)
+        .send(account3)
         .expect(201)
     user = await api
         .post('/login')
         .send({
-            accountName: "prueba",
-            password: "prueba1prueba"
+            accountName: "prueba3",
+            password: "prueba3prueba"
         })
         .expect(201)
 })
@@ -43,11 +43,11 @@ describe('get /- Get an existing account', () => {
         await api
             .get("/account")
             .set("authorization", token)
-            .query({ accountName: "prueba" }).
+            .query({ accountName: "prueba3" }).
             expect(response => {
                 expect(response.status).toBe(200);
-                expect(response.body.username).toBe(account.username);
-                expect(response.body.email).toBe(account.email);
+                expect(response.body.username).toBe(account3.username);
+                expect(response.body.email).toBe(account3.email);
                 expect(response.body.description).toBe("");
                 expect(response.body.profilePicture).toBe("");
                 expect(response.body.posts).toStrictEqual([]);
