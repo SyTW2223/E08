@@ -5,9 +5,18 @@ import profile from "./profile";
 import post from "./post";
 
 // Se combinan los reducers
-export default combineReducers({
+const appReducer = combineReducers({
   auth,
   message,
   profile,
   post,
-});
+})
+
+// Se exporta el reducer raíz
+export const rootReducer = (state, action) => {
+  if (action.type === '@APP/LOGOUT') {
+    // En caso de logout, se reinicia el state
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};

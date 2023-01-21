@@ -1,28 +1,13 @@
 import React from 'react'
 import { Post } from './Post'
-import { useSelector, useDispatch } from 'react-redux'
 import { Stack, Paper, Box, Typography } from '@mui/material'
 
-import { getAllPosts } from '../../actions/post';
 
-
-export const PostsList = () => {
-  const dispatch = useDispatch();
-
-
-  React.useEffect(() => {
-    dispatch(getAllPosts());
-  }, []);
-
-  const currentPost = useSelector(state => state.post);
-  const posts = currentPost.posts
-  const postFound = currentPost.postFound
-
-
-  if (postFound) {
+export const PostsList = ({ posts }) => {
+  if (posts.length > 0) {
     return (
       <Stack> 
-        { posts.map((post, index) => <Post id={post._id} title={post.title} accountName={post.accountName} content={post.content} index={index} tags={post.tags}/> ) }
+        { posts.map((post, index) => <Post id={post._id} title={post.title} accountName={post.accountName} profilePicture={post.profilePicture} content={post.content} index={index} tags={post.tags} date={post.date} /> ) }
       </Stack>
     )
   } else {

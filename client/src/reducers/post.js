@@ -1,16 +1,19 @@
 import {
-    POST_SUCCESS,
-    POST_FAIL_FOUND,
-    POST_CREATE,
-    POST_CREATE_FAIL,
-    POST_LIKE,
-    POST_LIKE_FAIL,
-    POST_DELETE,
-    POST_DELETE_FAIL,
-  } from "../actions/types";
+  POST_SUCCESS,
+  POST_FAIL_FOUND,
+  POST_CREATE,
+  POST_CREATE_FAIL,
+  POST_LIKE,
+  POST_LIKE_FAIL,
+  POST_DELETE,
+  POST_DELETE_FAIL,
+  PAGINATED_POST_SUCCESS,
+  PAGINATED_POST_FAIL,
+  CLEAR_POSTS
+} from "../actions/types";
 
 
-const initialState = {postStart: true, postCreate: false, postFound: false, postLike:false, posts: []};
+const initialState = { postStart: true, postCreate: false, postFound: false, next: 1, totalPages: 1, postLike: false, posts: [] };
 
 export default function PostReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -60,7 +63,28 @@ export default function PostReducer(state = initialState, action) {
         ...state,
         postDelete: false,
       };
+    case PAGINATED_POST_SUCCESS:
+      const next = Number(Number(payload.current) + Number(1));
+      const posts = payload.posts.filter(post => !state.posts.includes(post));
+      return {
+        ...state,
+        postFound: true,
+        posts: state.posts.concat(posts),
+        next: next,
+        current: payload.current,
+        totalPages: payload.pages,
+      };
+    case PAGINATED_POST_FAIL:
+      return {
+        ...state,
+        postFound: false,
+      };
+    case CLEAR_POSTS:
+      return {
+        ...state,
+        posts: [],
+      };
     default:
       return state;
-    }
   }
+}

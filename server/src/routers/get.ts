@@ -1,6 +1,6 @@
 import * as express from 'express';
-import {Account} from '../models/account';
-import {Post} from '../models/post';
+import { Account } from '../models/account';
+import { Post } from '../models/post';
 
 import * as jwt from '../middleware/authJwt';
 
@@ -13,7 +13,7 @@ export const getRouter = express.Router();
  * Gets all the info from an account by its account name
  */
 getRouter.get('/account', jwt.authenticateToken, (req, res) => {
-  const filter = req.query.accountName?{accountName: req.query.accountName.toString()}:undefined;
+  const filter = req.query.accountName ? { accountName: req.query.accountName.toString() } : undefined;
   if (!filter) {
     res.status(404).send("An account name needs to be provided");
   } else {
@@ -26,6 +26,7 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
           accountName: account.accountName,
           email: account.email,
           description: account.description,
+          profilePicture: account.profilePicture,
           posts: account.posts,
           likedPosts: account.likedPosts
         });
@@ -40,7 +41,7 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
 /**
  * Gets all the info from an account by its id
  */
- getRouter.get('/account/:id', jwt.authenticateToken, (req, res) => {
+getRouter.get('/account/:id', jwt.authenticateToken, (req, res) => {
   Account.findById(req.params.id).then((account) => {
     if (!account) {
       res.status(404).send("No account was found");
@@ -50,6 +51,7 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
         accountName: account.accountName,
         email: account.email,
         description: account.description,
+        profilePicture: account.profilePicture,
         posts: account.posts,
         likedPosts: account.likedPosts
       });
@@ -57,6 +59,31 @@ getRouter.get('/account', jwt.authenticateToken, (req, res) => {
   }).catch(() => {
     res.status(500).send();
   });
+});
+
+/**
+ * Returns posts from the database based on pagination system
+ */
+getRouter.get('/postsByPage', (req, res) => {
+  let perPage = 5;
+  let page = Number(req.query.page)|| 1;
+  Post.countDocuments()
+    .then((count) => {
+      Post.find({})
+        .sort({ date: -1 })
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((posts) => {
+          res.send({
+            posts: posts,
+            current: page,
+            pages: Math.ceil(count / perPage)
+          });
+        })
+    })
+    .catch(() => {
+      res.status(500).send();
+    });
 });
 
 
@@ -68,7 +95,7 @@ getRouter.get('/post', jwt.authenticateToken, (req, res) => {
   if (!title) {
     res.status(404).send("A title needs to be provided");
   } else {
-    Post.find({title: new RegExp(title, "i")}).then((post) => {
+    Post.find({ title: new RegExp(title, "i") }).then((post) => {
       if (post.length !== 0) {
         res.send(post);
       } else {
@@ -96,10 +123,11 @@ getRouter.get('/post/:id', jwt.authenticateToken, (req, res) => {
   });
 });
 
+
 /**
  * Gets all the posts
  */
-getRouter.get('/posts', (req, res) => {
+getRouter.get('/posts', (_, res) => {
   Post.find({}).then((posts) => {
     if (posts.length !== 0) {
       res.send(posts);

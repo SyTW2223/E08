@@ -63,34 +63,36 @@ deleteRouter.delete('/account/:id', jwt.authenticateToken, (req, res) => {
 /**
  * delete a post by its id  
  * */
-deleteRouter.delete('/post', jwt.authenticateToken, (req, res) => {
-    if(!req.body.postID || !req.body.accountName){
-        res.status(400).send({
-            error: 'A post ID must be provided', 
-        });
-        return;
-    } else {
-        const filter = { _id: req.body.postID };
-        Post.findOne(filter).then((post) => {
-            if (!post) {
-                res.status(404).send();
-            } else {
-                if(post.accountName === req.body.accountName){
-                    Post.findByIdAndDelete(post._id).then((post) => {
-                        if (!post) {
-                            res.status(404).send();
-                        } else {
-                            res.send(post);
-                        }
-                    }).catch(() => {
-                        res.status(400).send();
-                    });
-                } else {
-                    res.status(400).send();
-                }
-            }
-        }).catch(() => {
-            res.status(400).send();
-        });
+deleteRouter.delete('/post', jwt.authenticateToken, async (req, res) => {
+    try {
+        if (!req.body.postID || !req.body.accountName){
+            return res.status(400).json({
+                error: 'A post ID and an account name must be provided', 
+            });
+        }
+        const post = await Post.findById(req.body.postID);
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+        if (post.accountName !== req.body.accountName) {
+            return res.status(400).json({ error: 'Account name does not match post' });
+        }
+        const account = await Account.findOne({ accountName: post.accountName });
+        if (!account) {
+            return res.status(404).json({ error: 'Account not found' });
+        }
+        const deletedPost = await Post.findByIdAndDelete(req.body.postID);
+        if (!deletedPost) {
+            return res.status(404).json({ error: 'Post not found' });
+        } else {
+            account.posts = account.posts.filter( postID => {
+                return postID.toString() !== deletedPost._id.toString();
+            });
+            await account.save();
+            return res.json(deletedPost);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });

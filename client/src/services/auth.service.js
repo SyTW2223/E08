@@ -30,6 +30,7 @@ const login = (accountName, password) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("profile");
 }
 
 

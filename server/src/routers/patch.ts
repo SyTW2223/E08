@@ -2,6 +2,7 @@ require('dotenv').config();
 
 import * as express from 'express';
 import { Post } from '../models/post';
+import { Account } from '../models/account';
 import * as jwt from '../middleware/authJwt';
 
 
@@ -11,40 +12,83 @@ import * as jwt from '../middleware/authJwt';
 export const patchRouter = express.Router();
 
 /**
- * Likes a post
- */
-patchRouter.patch('/like', jwt.authenticateToken, (req, res) => {
-    if (!req.body.postID || !req.body.accountLike) {
-        res.status(400).send({
-            error: 'A post ID and account name must be provided', 
-        });
-        return;
-    }
-    const filterID = { _id: req.body.postID };
-    Post.findByIdAndUpdate(filterID, req.body, { new: true }).then((post) => {
-        if (post === null) {
-            res.status(404).send({
-                error: 'Post not found',
+ * Patch likes on a post
+*/
+patchRouter.patch('/like', jwt.authenticateToken, async (req, res) => {
+    try {
+        if (!req.body.postID || !req.body.accountLike) {
+            return res.status(400).json({
+                error: 'A post ID and account name must be provided'
             });
-        } else {
-            if (post.likesFromAccounts.length === 0) {
-                post.likesFromAccounts.push(req.body.accountLike);
-            } else{
-                for (let i = 0; i < post.likesFromAccounts.length; i++) {
-                    if (post.likesFromAccounts[i] === req.body.accountLike) {
-                        post.likesFromAccounts.splice(i, 1);
-                        break;
-                    } else if (i === post.likesFromAccounts.length - 1) {
-                        post.likesFromAccounts.push(req.body.accountLike);
-                        break;
-                    }
-                }
-            }
-            post.save();
-            res.status(200).send(post);
         }
-    }).catch((err) => {
+        const post = await Post.findById(req.body.postID);
+        const account = await Account.findOne({ accountName: req.body.accountLike });
+        if (!account || !post) {
+            return res.status(404).json({
+                error: 'Account or post not found'
+            });
+        }
+
+        if (post.likesFromAccounts.includes(account.accountName) && account.likedPosts.includes(post._id)) {
+            account.likedPosts = account.likedPosts.filter( postID => {
+                return postID.toString() !== post._id.toString();
+            })
+            post.likesFromAccounts = post.likesFromAccounts.filter(acc => acc !== account.accountName);
+        } else {
+            post.likesFromAccounts.push(account.accountName);
+            account.likedPosts.push(post._id);
+        }
+
+        await post.save();
+        await account.save();
+        return res.status(200).json(post);
+    } catch (err) {
         console.log(err);
-        res.status(500).send();
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+/**
+ * Patches the editable information of an account
+ */
+patchRouter.patch('/account', jwt.authenticateToken, async (req, res) => {
+  if (!req.query.accountName) {
+    return res.status(400).send({
+      error: 'An account name must be provided',
     });
+  }
+
+  const allowedUpdates = ['username', 'description', 'profilePicture'];
+  const actualUpdates = Object.keys(req.body);
+  const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
+
+  if (!isValidUpdate) {
+    return res.status(400).send({
+      error: 'Update is not permitted',
+    });
+  }
+
+  try {
+    const account = await Account.findOneAndUpdate({ accountName: req.query.accountName.toString() }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!account) {
+      return res.status(404).send();
+    }
+
+    if (req.body.profilePicture) {
+      await Post.updateMany(
+        { _id: { $in: account.posts } },
+        { $set: { profilePicture: account.profilePicture } },
+        { new: true }
+      );
+    }
+    
+    return res.send(account);
+  } catch (error) {
+    return res.status(400).send(error);
+  }
 });

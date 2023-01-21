@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import {
   Stack, Box, Container, Typography, Paper,
   TextField, FormControl, Grid, Button,
@@ -8,8 +9,13 @@ import {
 } from "@mui/material";
 import MessageIcon from '@mui/icons-material/Message';
 
-import { Posts } from '../actions/post';
 import { PostsList } from "./posts/PostsList";
+import { Posts } from '../actions/post';
+import { getPagedPost, clearPost } from '../actions/post';
+import { logout } from "../actions/auth";
+import { getTokenExpiration } from "../helpers";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 const tags = [
   'Science',
@@ -25,20 +31,55 @@ export const Main = () => {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState([]);
   const [postCreate, setPostCreate] = useState(false);
+
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
+  const currentProfile = useSelector(state => state.profile);
+  const { posts: currentPosts } = useSelector(state => state.post);
+  const nextPage = useSelector(state => state.post.next);
+  const totalPages = useSelector(state => state.post.totalPages);
 
   const dispatch = useDispatch();
+  let navigate = useNavigate();
 
+  React.useEffect(() => {
+    dispatch(clearPost()).then(() => {
+      dispatch(getPagedPost(1));
+    });
+  }, [dispatch]);
+
+  const handleLogout = React.useCallback(() => {
+    dispatch(logout());
+    navigate('/login');
+  }, [dispatch, navigate]);
 
   const handlePost = (e) => {
-    const nameAcount = currentUser.accountName;
-    dispatch(Posts(nameAcount, title, content, tag)).then(() => {
+    e.preventDefault();
+    const nameAccount = currentUser.accountName;
+    const profilePicture = currentProfile.profilePicture;
+    dispatch(Posts(nameAccount, profilePicture, title, content, tag)).then(() => {
       setPostCreate(true);
-
+      setTitle("");
+      setContent("");
+      setTag([]);
+      dispatch(clearPost()).then(() => {
+        dispatch(getPagedPost(1));
+      });
     }).catch(() => {
+      const tokenExpiration = getTokenExpiration(currentUser.accessToken);
+      if (tokenExpiration < new Date()) {
+        handleLogout();
+      }
       setPostCreate(false);
     });
+  }
+
+  const HasMore = () => {
+    if (nextPage <= totalPages) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const handleChange = (event) => {
@@ -141,15 +182,15 @@ export const Main = () => {
                 </Stack>
               </form>
             ) : (
-              <Box 
-                display="flex" 
-                flexDirection="row" 
-                alignItems="center" 
-                justifyContent="center" 
-                padding={2} 
-                bgcolor = 'primary.light' 
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                padding={2}
+                bgcolor='primary.light'
                 sx={{ borderRadius: 3 }}
-                >
+              >
                 <Typography variant="h5">
                   Please login to post
                 </Typography>
@@ -164,7 +205,30 @@ export const Main = () => {
             </Box>
           </Stack>
           <Stack >
-            <PostsList />
+            <InfiniteScroll
+              dataLength={currentPosts.length || 0}
+              hasMore={HasMore}
+              next={() => {
+                dispatch(getPagedPost(nextPage));
+              }}
+              loader={
+                nextPage <= totalPages ? (
+                  <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
+                    <Typography variant="body1">
+                      Loading...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" padding={2}>
+                    <Typography variant="body1">
+                      Oh no! Seems like we run out of posts... 😦
+                    </Typography>
+                  </Box>
+                )
+              }
+            >
+              <PostsList posts={currentPosts} />
+            </InfiniteScroll>
           </Stack>
         </Container>
       </Box>

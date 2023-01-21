@@ -9,6 +9,7 @@ interface AccountInterface {
   password: string,
   description: string,
   email: string,
+  profilePicture: string,
   posts: Types.ObjectId[];
   likedPosts: Types.ObjectId[];
 }
@@ -37,6 +38,10 @@ const AccountSchema = new Schema<AccountInterface>({
     trim: true,
   },
   description: {
+    type: String,
+    default: "",
+  },
+  profilePicture: {
     type: String,
     default: "",
   },
