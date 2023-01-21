@@ -46,7 +46,8 @@ beforeAll(async () => {
         .send({
             accountName: "prueba2",
             password: "prueba2prueba"
-        });
+        })
+        .expect(201);
 })
 
 afterAll(async () => {
