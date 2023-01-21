@@ -13,6 +13,7 @@ beforeAll(async () => {
 });
 
 afterAll(async() => {
+  await Account.deleteMany({});
   server.close();
   db.close();
 });

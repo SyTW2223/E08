@@ -50,6 +50,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+    await Account.deleteMany({});
     db.close();
     server.close();
 });
