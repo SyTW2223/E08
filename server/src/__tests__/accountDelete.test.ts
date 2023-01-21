@@ -32,17 +32,17 @@ beforeAll(async () => {
         .post('/signup')
         .send(account)
         .expect(201)
+    await api
+        .post('/signup')
+        .send(account2)
+        .expect(201)
     user = await api
         .post('/login')
         .send({
             accountName: "prueba",
             password: "prueba1prueba"
         })
-        .expect(201)
-    await api
-        .post('/signup')
-        .send(account2)
-        .expect(201)
+        .expect(201);
     user2 = await api
         .post('/login')
         .send({
@@ -127,5 +127,5 @@ describe('Delete by id /- Delete an existing account', () => {
                 expect(response.text).not.toBeNull();
             });
     });
-        
+
 });
