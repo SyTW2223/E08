@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Paper, Box, Typography, Grid, IconButton, Avatar } from "@mui/material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -45,10 +46,12 @@ function stringAvatar(name) {
 
 
 export const Post = ({ id, title, accountName, profilePicture, content, index, tags, date }) => {
-  const dispatch = useDispatch();
   const currentPosts = useSelector(state => state.post.posts);
   const { isLoggedIn } = useSelector(state => state.auth);
   const { user: currentUser } = useSelector(state => state.auth);
+
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
 
   return (
     <Paper elevation={3} sx={{ padding: 3, margin: 2 }}>
@@ -103,15 +106,20 @@ export const Post = ({ id, title, accountName, profilePicture, content, index, t
             <Typography variant="subtitle1" fontSize="1em">
               {currentPosts[index].likesFromAccounts.length}
             </Typography>
-            {currentUser && currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
+            {isLoggedIn
               ? <IconButton
                 aria-label="like"
-                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
-                <FavoriteIcon size="1em" />
+                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}
+              >
+                {currentPosts[index].likesFromAccounts.includes(currentUser.accountName)
+                  ? <FavoriteIcon size="1em" />
+                  : <FavoriteBorderIcon size="1em" />
+                }
               </IconButton>
               : <IconButton
-                aria-label="like"
-                onClick={() => ButtonLikeHandler(id, currentUser.accountName, dispatch)}>
+                aria-label="navigate to login"
+                onClick={() => navigate('/login')}
+              >
                 <FavoriteBorderIcon size="1em" />
               </IconButton>
             }
@@ -120,7 +128,7 @@ export const Post = ({ id, title, accountName, profilePicture, content, index, t
         <Grid item md={12} xs={12}>
           <Box display="flex" alignItems="center" justifyContent="left" marginLeft="2em" marginRight="2em">
             <Typography variant="body2">
-              {date.slice(11, 16)} | {date.slice(0, 10)} 
+              {date.slice(11, 16)} | {date.slice(0, 10)}
             </Typography>
           </Box>
         </Grid>

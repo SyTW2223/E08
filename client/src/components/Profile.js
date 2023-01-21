@@ -139,8 +139,6 @@ export const Profile = () => {
     dispatch(editProfile(currentUser.accountName, changes))
       .then(() => {
         setUploadImage("");
-        setEditDescription("");
-        setEditUsername("");
         setProfileLoaded(true);
       }).catch(() => {
         const tokenExpiration = getTokenExpiration(currentUser.accessToken);
