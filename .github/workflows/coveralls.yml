@@ -18,7 +18,6 @@ jobs:
     env:
       COVERALLS_PARALLEL: true
       MONGO_DB_URI_TEST: mongodb+srv://SyTW:sytw123@cluster0.vrub0al.mongodb.net/test-app?retryWrites=true&w=majority
-      testTimeout: 100000000
 
     defaults:
         run:
