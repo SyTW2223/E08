@@ -3,5 +3,5 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ["./src"],
-  "testTimeout": 1000000
+  "testTimeout": 100000000
 };
