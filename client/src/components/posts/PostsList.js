@@ -7,7 +7,7 @@ export const PostsList = ({ posts }) => {
   if (posts.length > 0) {
     return (
       <Stack> 
-        { posts.map((post, index) => <Post id={post._id} title={post.title} accountName={post.accountName} profilePicture={post.profilePicture} content={post.content} index={index} tags={post.tags} date={post.date} /> ) }
+        { posts.map((post) => <Post id={post._id} title={post.title} accountName={post.accountName} profilePicture={post.profilePicture} content={post.content} likes={post.likesFromAccounts} tags={post.tags} date={post.date} /> ) }
       </Stack>
     )
   } else {

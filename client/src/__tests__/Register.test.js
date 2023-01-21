@@ -1,7 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "../testUtils";
-//import { userEvent } from "@testing-library/user-event";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { Register } from "../components/Register";
@@ -44,24 +43,23 @@ describe("SignUp component tests", () => {
   });
 });
 
-// describe("User Sign Up test", () => {
-//   it("The user sign up correctly", async () => {
-//     const userNameField = screen.getByLabelText(/username/i);
-//     const accountNameField = screen.getByLabelText(/account name/i);
-//     const emailField = screen.getByLabelText(/email/i);
-//     const passwordField = screen.getByLabelText(/password/i);
-// 
-//     fireEvent.change(userNameField, {target: {value: 'pepe'}})
-//     fireEvent.change(accountNameField, {target: {value: '@pepe'}})
-//     fireEvent.change(emailField, {target: {value: 'pepe@gmail.com'}})
-//     fireEvent.change(passwordField, {target: {value: '1234'}})
-// 
-//     const buttonsign = screen.getByRole('button', {name: /sign me up/i});
-//     fireEvent.click(buttonsign);
-// 
-//     const resultRegister = await screen.findByText(/Account successfully created/i)
-// 
-//     screen.debug()
-//     expect(resultRegister).toBeInTheDocument()
-//   });
-// });
+describe("User Sign Up input test", () => {
+  it("User Input is correctly controlled", async () => {
+    const userNameField = screen.getByLabelText(/username/i);
+    const accountNameField = screen.getByLabelText(/account name/i);
+    const emailField = screen.getByLabelText(/email/i);
+    const passwordField = screen.getByLabelText(/password/i);
+
+    fireEvent.change(userNameField, {target: {value: 'pepe'}});
+    fireEvent.change(accountNameField, {target: {value: 'pepe. '}});
+    fireEvent.change(emailField, {target: {value: 'pepe@mail.es'}});
+    fireEvent.change(passwordField, {target: {value: '12345678q'}});
+
+    const buttonsign = screen.getByRole('button', {name: /sign me up/i});
+    fireEvent.click(buttonsign);
+
+    const accountError = screen.getByText(/The account name must have a length less than or equal to 20 and can only contain alphanumeric characters./i);
+
+    expect(accountError).toBeInTheDocument();
+  });
+});

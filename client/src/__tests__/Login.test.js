@@ -1,7 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen } from "../testUtils";
-//import { userEvent } from "@testing-library/user-event";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { Login } from "../components/Login";
