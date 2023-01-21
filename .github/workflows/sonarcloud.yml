@@ -6,8 +6,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  tests:
-    name: Tests
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,6 +26,8 @@ jobs:
     steps:
     - name: Cloning repo
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
     - name: Use Node.js 19.x
       uses: actions/setup-node@v3
       with:
@@ -34,17 +36,8 @@ jobs:
     - name: Installing dependencies
       run: npm install
     - name: Generating coverage information
-      run: npm run coverage
-
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    needs: [tests]
-    steps:
-    - uses: actions/setup-node@v3
-      with:
-        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-    - name: SonarCloud Scan
+      run: npm run coverage  
+    - name: SonarCloud Scan ${{ matrix.folder }}
       uses: SonarSource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
