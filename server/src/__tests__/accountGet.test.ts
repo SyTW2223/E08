@@ -7,7 +7,6 @@ import { Account } from '../models/account';
 const api = supertest(app)
 let user: any;
 
-jest.setTimeout(30000);
 
 const account3 = {
     username: "Prueba3",

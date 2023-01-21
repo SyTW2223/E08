@@ -7,7 +7,6 @@ import { Account } from '../models/account';
 
 const api = supertest(app)
 
-jest.setTimeout(30000);
 
 beforeAll(async () => {
   await Account.deleteMany({});
