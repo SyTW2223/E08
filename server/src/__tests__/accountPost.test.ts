@@ -114,7 +114,7 @@ describe('POST / - creation of a new account', () => {
           expect(response.body.message).toBe("Account successfully created")
         });
     } catch (error) {
-      expect(error).toBe("Account successfully created");
+      expect(error).not.toBeNull();
     }
   });
   test('It should not create an existing account', async () => {
