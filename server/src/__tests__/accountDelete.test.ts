@@ -63,94 +63,71 @@ afterAll(async () => {
 describe('Delete /- Delete an existing account', () => {
     test('It must require an account name', async () => {
         const token = "Bearer " + user.body.accessToken;
-        try {
-            await api
-                .delete("/account")
-                .set("authorization", token)
-                .expect(response => {
-                    expect(response.status).toBe(404);
-                    expect(response.text).toBe(
-                        "An account name needs to be provided"
-                    );
-                });
-        } catch (error) {
-            expect(error).toBe("An account name needs to be provided")
-        }
+        await api
+            .delete("/account")
+            .set("authorization", token)
+            .expect(response => {
+                expect(response.status).toBe(404);
+                expect(response.text).toBe(
+                    "An account name needs to be provided"
+                );
+            });
     });
     test('It must require a valid token', async () => {
-        try {
-            await api
-                .delete("/account")
-                .set("authorization", "rhbbjewbfjeqbhfqwhdjksddcjdcbjadbcjhas")
-                .expect(response => {
-                    expect(response.status).toBe(401);
-                    expect(response.text).toBe(
-                        "Please authenticate"
-                    );
-                });
-        } catch (error)  {
-            expect(error).toBe("Please authenticate")
-        }
+        await api
+            .delete("/account")
+            .set("authorization", "rhbbjewbfjeqbhfqwhdjksddcjdcbjadbcjhas")
+            .expect(response => {
+                expect(response.status).toBe(401);
+                expect(response.text).toBe(
+                    "Please authenticate"
+                );
+            });
     });
     test('It must require a valid account name', async () => {
         const token = "Bearer " + user.body.accessToken;
-        try {
-            await api
-                .delete("/account")
-                .set("authorization", token)
-                .query({ accountName: "prueba1" })
-                .expect(response => {
-                    expect(response.status).toBe(404);
-                    expect(response.text).toBe(
-                        "Account not found"
-                    );
-                });
-        } catch (error) {
-            expect(error).toBe("Account not found")
-        }
+        await api
+            .delete("/account")
+            .set("authorization", token)
+            .query({ accountName: "prueba1" })
+            .expect(response => {
+                expect(response.status).toBe(404);
+                expect(response.text).toBe(
+                    "Account not found"
+                );
+            });
     });
     test('deleting the account created', async () => {
         const token = "Bearer " + user.body.accessToken;
-        try {
-            await api
-                .delete("/account")
-                .set("authorization", token).query({ accountName: "prueba" }).
-                expect(200)
-        } catch (error) {
-            expect(error).toBe("Account not found")
-        }
+        await api
+            .delete("/account")
+            .set("authorization", token).query({ accountName: "prueba" }).
+            expect(200)
     })
 })
 
 describe('Delete by id /- Delete an existing account', () => {
     test('It must require a valid token', async () => {
-        try {
-            await api
-                .delete(`/account/${user2.body.id}`)
-                .set("authorization", "rhbbjewbfjeqbhfqwhdjksddcjdcbjadbcjhas")
-                .expect(response => {
-                    expect(response.status).toBe(401);
-                    expect(response.text).toBe(
-                        "Please authenticate"
-                    );
-                });
-        } catch (error)  {
-            expect(error).toBe("Please authenticate");
-        }
+        await api
+            .delete(`/account/${user2.body.id}`)
+            .set("authorization", "rhbbjewbfjeqbhfqwhdjksddcjdcbjadbcjhas")
+            .expect(response => {
+                expect(response.status).toBe(401);
+                expect(response.text).toBe(
+                    "Please authenticate"
+                );
+            });
     });
     test('deleting the account created', async () => {
         const token = "Bearer " + user2.body.accessToken;
-        try {
-            await api
-                .delete(`/account/${user2.body.id}`)
-                .set("authorization", token)
-                .expect(response => {
-                    expect(response.status).toBe(200);
-                    expect(response.text).not.toBeNull();
-                });
-        } catch (error) {
-            expect(error).toBe("Account not found");
-        }
+
+        await api
+            .delete(`/account/${user2.body.id}`)
+            .set("authorization", token)
+            .expect(response => {
+                expect(response.status).toBe(200);
+                expect(response.text).not.toBeNull();
+            });
     });
 
 });

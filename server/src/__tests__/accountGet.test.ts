@@ -43,8 +43,7 @@ afterAll(async () => {
 describe('get /- Get an existing account', () => {
     test('getting the account created', async () => {
         const token = "Bearer " + user.body.accessToken;
-        try {
-            await api
+        await api
             .get("/account")
             .set("authorization", token)
             .query({ accountName: "prueba3" }).
@@ -57,8 +56,5 @@ describe('get /- Get an existing account', () => {
                 expect(response.body.posts).toStrictEqual([]);
                 expect(response.body.likedPosts).toStrictEqual([]);
             })
-        } catch (error) {
-            expect(error).not.toBeNull();
-        }
     });
 });
