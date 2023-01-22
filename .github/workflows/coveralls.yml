@@ -13,7 +13,6 @@ jobs:
       matrix:
         folder:
           - 'client'
-          - 'server'
   
     env:
       COVERALLS_PARALLEL: true
