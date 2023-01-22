@@ -8,7 +8,7 @@
     "start-test": "NODE_ENV=test node dist/index.js",
     "test": "NODE_ENV=test jest --verbose --silent",
     "coverage": "NODE_ENV=test jest --verbose --detectOpenHandles --coverage",
-    "alltest": "npm run test  -- ./__tests__/accountPost.test.ts && npm run test  -- ./__tests__/accountGet.test.ts && npm run test  -- ./__tests__/accountDelete.test.ts",
+    "alltest": "npm run test  -- ./__tests__/accountPost.test.ts && npm run test  -- ./__tests__/accountGet.test.ts && npm run test  -- ./__tests__/accountDelete.test.ts"
   },
   "keywords": [],
   "author": "",
