@@ -14,6 +14,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  jest.useRealTimers();
   await Account.deleteMany({});
   server.close();
   db.close();
