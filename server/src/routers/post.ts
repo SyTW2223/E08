@@ -37,6 +37,7 @@ postRouter.post('/signup', async (req, res) => {
           message: "Account successfully created",
         });
       }).catch((error) => {
+        console.log(error);
         res.status(400).send(error);
       });
     } else {
