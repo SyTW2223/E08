@@ -55,7 +55,7 @@ npm start
 ```
 ## Enlace al despliegue de la aplicación
 Actualmente, la aplicación se encuentra desplegada a través del servicio de Vercel en el siguiente enlace: 
-[https://sytw-frontend-e08.vercel.app/](https://sytw-frontend-e08.vercel.app/)
+* [https://sytw-frontend-e08.vercel.app/](https://sytw-frontend-e08.vercel.app/)
 ## Autores:
 * Tanausú Falcón Casanova | alu0101320878@ull.edu.es
 * Vlatko Jesús Marchán Sekulic | alu0101321141@ull.edu.es
