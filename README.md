@@ -53,7 +53,7 @@ Para el frontend:
 ```bash
 npm start
 ```
-## Enlace al despliegue de la aplicación
+## Enlace a la aplicación
 Actualmente, la aplicación se encuentra desplegada a través del servicio de Vercel en el siguiente enlace: 
 * [https://sytw-frontend-e08.vercel.app/](https://sytw-frontend-e08.vercel.app/)
 ## Autores:
